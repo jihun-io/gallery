@@ -86,7 +86,7 @@ export default function PhotosArticle({
             className="relative h-full"
           >
             <Image
-              src={`/photos/${fileName}`}
+              src={`/photos/${encodeURIComponent(fileName)}`}
               alt={title}
               fill={true}
               sizes="(max-width: 768px) 60vw,
