@@ -6,11 +6,17 @@ import path from "path";
 import PhotosArticle from "./photos-article";
 
 function formatDate(dateTimeStr) {
-  // YYYY:MM:DD HH:MM:SS 형식을 Date 객체로 변환
+  // YYYY:MM:DD HH:MM:SS 형식을 Date 객체로 변환 (KST 기준)
   const [datePart, timePart] = dateTimeStr.split(" ");
   const [year, month, day] = datePart.split(":");
   const [hour, minute, second] = timePart.split(":");
-  return new Date(year, month - 1, day, hour, minute, second);
+
+  // KST로 Date 객체 생성 (UTC+9)
+  const date = new Date(
+    Date.UTC(year, month - 1, day, hour - 9, minute, second)
+  );
+
+  return date;
 }
 
 export async function PhotosList() {
