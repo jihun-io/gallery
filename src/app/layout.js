@@ -15,7 +15,7 @@ export const metadata = generateMetadata(
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body
         className={`antialiased bg-background text-foreground px-12 min-h-[100vh] grid grid-rows-[auto,1fr,auto]`}
       >
