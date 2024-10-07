@@ -45,6 +45,7 @@ export async function PhotosList() {
         <h2 className="sr-only">사진 목록</h2>
         {photos.map((photo, index) => (
           <PhotosArticle
+            key={index}
             index={index}
             fileName={photo.fileName}
             title={photo.title}

@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 export default function PhotosArticle({
+  key,
   index,
   fileName,
   title,
