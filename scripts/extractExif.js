@@ -30,7 +30,7 @@ async function getExifData(filePath) {
       fileName: fileName,
       title: fileName
         .replace(new RegExp(extensions.join("|"), "i"), "")
-        .replace(/_/g, " "),
+        .replace(/-/g, " "),
       make: tags.Make?.description,
       model: tags.Model?.description,
       dateTime: tags.DateTime?.description,
