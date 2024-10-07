@@ -86,7 +86,7 @@ export default function PhotosArticle({
             className="relative h-full"
           >
             <Image
-              src={`/photos/${fileName}`}
+              src={encodeURI(`https://cdn.jihun.io/${fileName}`)}
               alt={title}
               fill={true}
               sizes="(max-width: 768px) 60vw,
@@ -116,7 +116,7 @@ export default function PhotosArticle({
               }`}
             >
               <Image
-                src={`/photos/${fileName}`}
+                src={encodeURI(`https://cdn.jihun.io/${fileName}`)}
                 alt={title}
                 fill={true}
                 quality={100}
