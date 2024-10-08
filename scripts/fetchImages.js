@@ -3,17 +3,22 @@ import path from "path";
 import sharp from "sharp";
 import fetch from "node-fetch";
 import { fileURLToPath } from "url";
+import { encodeFilename } from "../utils/filenameEncoding.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const outputDir = path.join(__dirname, "..", "public", "photos");
 const originalDir = path.join(outputDir, "originals");
+const OUTPUT_JSON = path.join(process.cwd(), "public", "photoName.json");
 
 const sizes = [320, 640, 1024, 1920];
 const formats = ["webp", "jpg"];
 
 const WORKER_URL = "https://galleryjihuniophotos.ztqckg569b.workers.dev";
+
+// 파일명 매핑을 저장할 객체
+let fileNameMapping = [];
 
 async function getFileList() {
   const response = await fetch(`${WORKER_URL}/list-files`);
@@ -41,13 +46,21 @@ async function fileExists(filePath) {
 }
 
 async function saveOriginalImage(imageBuffer, fileName) {
-  const outputPath = path.join(originalDir, fileName);
+  const encodedFileName = encodeFilename(fileName);
+  const outputPath = path.join(originalDir, encodedFileName);
   if (await fileExists(outputPath)) {
     console.log(`Original already exists: ${fileName}`);
     return false;
   }
   await fs.writeFile(outputPath, Buffer.from(imageBuffer));
   console.log(`Saved original: ${fileName}`);
+
+  // 파일명 매핑 추가
+  fileNameMapping.push({
+    title: path.parse(fileName).name,
+    filename: encodedFileName,
+  });
+
   return true;
 }
 
@@ -56,12 +69,15 @@ async function optimizeImage(imageBuffer, fileName) {
   const metadata = await image.metadata();
 
   let optimized = false;
+  const encodedFileName = encodeFilename(fileName);
 
   for (const size of sizes) {
     if (size > metadata.width) continue;
 
     for (const format of formats) {
-      const outputFileName = `${path.parse(fileName).name}-${size}.${format}`;
+      const outputFileName = `${
+        path.parse(encodedFileName).name
+      }-${size}.${format}`;
       const outputPath = path.join(outputDir, outputFileName);
 
       if (await fileExists(outputPath)) {
@@ -88,12 +104,17 @@ async function processFiles(files) {
 
     console.log(`Processing: ${file.name}`);
 
-    const originalPath = path.join(originalDir, file.name);
+    const originalPath = path.join(originalDir, encodeFilename(file.name));
     let imageBuffer;
 
     if (await fileExists(originalPath)) {
       console.log(`Using existing original: ${file.name}`);
       imageBuffer = await fs.readFile(originalPath);
+      // 기존 파일에 대한 매핑 추가
+      fileNameMapping.push({
+        title: file.name,
+        filename: encodeFilename(file.name),
+      });
     } else {
       console.log(`Downloading: ${file.name}`);
       imageBuffer = await downloadImage(`${WORKER_URL}${file.url}`);
@@ -108,6 +129,11 @@ async function processFiles(files) {
   }
 }
 
+async function saveFileNameMapping() {
+  await fs.writeFile(OUTPUT_JSON, JSON.stringify(fileNameMapping, null, 2));
+  console.log(`File name mapping saved to ${OUTPUT_JSON}`);
+}
+
 async function main() {
   try {
     await fs.mkdir(outputDir, { recursive: true });
@@ -118,6 +144,7 @@ async function main() {
     console.log(`Found ${files.length} files.`);
 
     await processFiles(files);
+    await saveFileNameMapping();
     console.log("Image optimization completed successfully!");
   } catch (error) {
     console.error("An error occurred:", error);

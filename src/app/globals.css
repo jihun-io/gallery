@@ -1,14 +1,16 @@
+@import url(../../public/fonts/pretendardvariable-dynamic-subset.css);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
+/* @font-face {
   font-family: "Pretendard Variable";
   font-weight: 45 920;
   font-style: normal;
   font-display: swap;
   src: url("/fonts/PretendardVariable.woff2") format("woff2");
-}
+} */
 
 :root {
   --background: #ffffff;
@@ -18,10 +20,10 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: pretendard variable, Pretendard, "Apple SD Gothic Neo",
-    -apple-system, BlinkMacSystemFont, system-ui, Roboto, helvetica neue,
-    segoe ui, apple sd gothic neo, noto sans kr, malgun gothic,
-    apple color emoji, segoe ui emoji, segoe ui symbol, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   font-weight: 500;
 }
 

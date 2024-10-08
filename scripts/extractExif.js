@@ -6,6 +6,7 @@ import sharp from "sharp";
 
 const PHOTOS_DIR = join(process.cwd(), "public", "photos", "originals");
 const OUTPUT_FILE = join(process.cwd(), "public", "exif-data.json");
+const FILENAME_MAPPING_FILE = join(process.cwd(), "public", "photoName.json");
 
 async function getImageDimensions(filePath) {
   try {
@@ -20,19 +21,33 @@ async function getImageDimensions(filePath) {
   }
 }
 
-async function getExifData(filePath) {
+async function loadFileNameMapping() {
+  try {
+    const data = await fs.readFile(FILENAME_MAPPING_FILE, "utf8");
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error loading filename mapping:", error);
+    return [];
+  }
+}
+
+async function getExifData(filePath, fileNameMapping) {
   try {
     const data = await fs.readFile(filePath);
     const tags = await load(data);
     const dimensions = await getImageDimensions(filePath);
     const fileName = basename(filePath);
-    const extensions = [".jpg", ".jpeg", ".png", ".gif"];
+
+    // Find the corresponding title from the mapping
+    const mappingEntry = fileNameMapping.find(
+      (entry) => entry.filename === fileName
+    );
+    const title = mappingEntry ? mappingEntry.title : fileName;
+
     return {
       src: fileName,
-      fileName: fileName.replace(new RegExp(extensions.join("|"), "i"), ""),
-      title: fileName
-        .replace(new RegExp(extensions.join("|"), "i"), "")
-        .replace(/-/g, " "),
+      fileName: fileName.replace(/\.[^/.]+$/, ""),
+      title: title.replace(/\.[^/.]+$/, "").replace(/-/g, " "),
       make: tags.Make?.description,
       model: tags.Model?.description,
       dateTime: tags.DateTime?.description,
@@ -52,12 +67,13 @@ async function getExifData(filePath) {
 
 async function processPhotos() {
   try {
+    const fileNameMapping = await loadFileNameMapping();
     const files = await fs.readdir(PHOTOS_DIR);
     const exifDataPromises = files
       .filter((file) =>
         [".jpg", ".jpeg", ".png", ".gif"].includes(extname(file).toLowerCase())
       )
-      .map((file) => getExifData(join(PHOTOS_DIR, file)));
+      .map((file) => getExifData(join(PHOTOS_DIR, file), fileNameMapping));
 
     const exifDataList = await Promise.all(exifDataPromises);
     const validExifData = exifDataList.filter((data) => data !== null);
