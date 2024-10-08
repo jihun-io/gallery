@@ -128,7 +128,7 @@ export default function PhotosArticle({
           </div>
           <div className="desc flex flex-col gap-y-1 p-8 pt-0 basis-auto">
             <h3 className="text-lg font-black">{title}</h3>
-            <time className="text-sm text-shark-300">
+            <time dateTime={dateTimeObj} className="text-sm text-shark-300">
               {" "}
               {new Date(dateTimeObj).toLocaleString()}
             </time>
