@@ -125,7 +125,7 @@ export default function PhotosArticle({
                 alt={title}
                 sizes="100vw"
                 loading="lazy"
-                style={{ aspectRatio: `${width}/${height}` }}
+                style={{ aspectRatio: `${width}/${height}`, height: `100%` }}
                 className="object-contain z-50"
               />
             </div>
