@@ -89,8 +89,7 @@ export default function PhotosArticle({
               src={encodeURI(`https://cdn.jihun.io/${fileName}`)}
               alt={title}
               fill={true}
-              sizes="(max-width: 768px) 25vw,
-               (max-width: 1024px) 50vw"
+              sizes="25vw"
               loading="lazy"
               style={{ aspectRatio: `${width}/${height}` }}
               className="object-contain"
