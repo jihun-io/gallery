@@ -1,10 +1,11 @@
-const fs = require("fs").promises;
-const path = require("path");
-const ExifReader = require("exifreader");
-const sharp = require("sharp");
+import pkg from "exifreader";
+import { promises as fs } from "fs";
+import { join, basename, extname } from "path";
+const { load } = pkg;
+import sharp from "sharp";
 
-const PHOTOS_DIR = path.join(process.cwd(), "public", "photos");
-const OUTPUT_FILE = path.join(process.cwd(), "public", "exif-data.json");
+const PHOTOS_DIR = join(process.cwd(), "public", "photos", "originals");
+const OUTPUT_FILE = join(process.cwd(), "public", "exif-data.json");
 
 async function getImageDimensions(filePath) {
   try {
@@ -22,12 +23,13 @@ async function getImageDimensions(filePath) {
 async function getExifData(filePath) {
   try {
     const data = await fs.readFile(filePath);
-    const tags = await ExifReader.load(data);
+    const tags = await load(data);
     const dimensions = await getImageDimensions(filePath);
-    const fileName = path.basename(filePath);
+    const fileName = basename(filePath);
     const extensions = [".jpg", ".jpeg", ".png", ".gif"];
     return {
-      fileName: fileName,
+      src: fileName,
+      fileName: fileName.replace(new RegExp(extensions.join("|"), "i"), ""),
       title: fileName
         .replace(new RegExp(extensions.join("|"), "i"), "")
         .replace(/-/g, " "),
@@ -53,11 +55,9 @@ async function processPhotos() {
     const files = await fs.readdir(PHOTOS_DIR);
     const exifDataPromises = files
       .filter((file) =>
-        [".jpg", ".jpeg", ".png", ".gif"].includes(
-          path.extname(file).toLowerCase()
-        )
+        [".jpg", ".jpeg", ".png", ".gif"].includes(extname(file).toLowerCase())
       )
-      .map((file) => getExifData(path.join(PHOTOS_DIR, file)));
+      .map((file) => getExifData(join(PHOTOS_DIR, file)));
 
     const exifDataList = await Promise.all(exifDataPromises);
     const validExifData = exifDataList.filter((data) => data !== null);

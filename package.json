@@ -1,17 +1,21 @@
 {
+  "type": "module",
   "name": "gallery",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "fetch-images": "node scripts/fetchImages.js",
     "extract-exif": "node scripts/extractExif.js",
-    "dev": "npm run extract-exif && next dev",
-    "build": "npm run extract-exif && next build",
+    "dev": "npm run fetch-images && npm run extract-exif && next dev",
+    "build": "npm run fetch-images && npm run extract-exif && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "exifreader": "^4.23.6",
+    "fs": "^0.0.1-security",
     "next": "14.2.14",
+    "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
     "sharp": "^0.33.5"

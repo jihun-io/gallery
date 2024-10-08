@@ -3,11 +3,17 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import OptimizedImage from "../components/optimized-image";
+
+const defaultLoader = ({ src, width, quality }) => {
+  return `${src}`;
+};
 
 export default function PhotosArticle({
   key,
   index,
   fileName,
+  src,
   title,
   dateTimeObj,
   make,
@@ -85,20 +91,18 @@ export default function PhotosArticle({
             }}
             className="relative h-full"
           >
-            <Image
-              src={encodeURI(`https://cdn.jihun.io/${fileName}`)}
+            <OptimizedImage
+              source={src}
+              fileName={fileName}
               alt={title}
               fill={true}
-              sizes="(max-width: 768px) 60vw,
-               (max-width: 1024px) 80vw"
-              loading="lazy"
               style={{ aspectRatio: `${width}/${height}` }}
               className="object-contain"
             />
           </div>
         </div>
         <h2 className="text-lg font-black">{title}</h2>
-        <time className="text-sm text-shark-300">
+        <time dateTime={dateTimeObj} className="text-sm text-shark-300">
           {" "}
           {new Date(dateTimeObj).toLocaleString()}
         </time>
@@ -111,15 +115,15 @@ export default function PhotosArticle({
                 maxHeight: `${imgHeight}px`,
                 aspectRatio: `${width}/${height}`,
               }}
-              className={`relative w-full ${
+              className={`flex justify-center items-center relative w-full ${
                 width - height < 0 && "h-full max-w-min"
               }`}
             >
-              <Image
-                src={encodeURI(`https://cdn.jihun.io/${fileName}`)}
+              <img
+                src={encodeURI(`/photos/originals/${src}`)}
+                loader={defaultLoader}
                 alt={title}
-                fill={true}
-                quality={100}
+                sizes="100vw"
                 loading="lazy"
                 style={{ aspectRatio: `${width}/${height}` }}
                 className="object-contain z-50"
@@ -128,7 +132,7 @@ export default function PhotosArticle({
           </div>
           <div className="desc flex flex-col gap-y-1 p-8 pt-0 basis-auto">
             <h3 className="text-lg font-black">{title}</h3>
-            <time className="text-sm text-shark-300">
+            <time dateTime={dateTimeObj} className="text-sm text-shark-300">
               {" "}
               {new Date(dateTimeObj).toLocaleString()}
             </time>
