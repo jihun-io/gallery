@@ -37,3 +37,4 @@ next-env.d.ts
 public/exif-data.json
 /public/photos
 /.wrangler
+/public/photos-r2-storage
