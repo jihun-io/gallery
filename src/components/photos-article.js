@@ -97,7 +97,7 @@ export default function PhotosArticle({
               alt={title}
               fill={true}
               style={{ width: "100%", aspectRatio: `${width}/${height}` }}
-              className="object-contain"
+              className="thumbnail object-contain"
             />
           </div>
         </div>
