@@ -47,7 +47,10 @@ async function getExifData(filePath, fileNameMapping) {
     return {
       src: fileName,
       fileName: fileName.replace(/\.[^/.]+$/, ""),
-      title: title.replace(/\.[^/.]+$/, "").replace(/-/g, " "),
+      title: title
+        .replace(/\.[^/.]+$/, "")
+        .replace(/--/g, ": ")
+        .replace(/-/g, " "),
       make: tags.Make?.description,
       model: tags.Model?.description,
       dateTime: tags.DateTime?.description,
