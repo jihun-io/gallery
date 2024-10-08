@@ -1,14 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn.jihun.io",
-        port: "",
-        pathname: "/**",
-      },
-    ],
+    loader: "custom",
+    disableStaticImages: true, // 선택적: 정적 이미지 임포트 비활성화
   },
   i18n: {
     locales: ["ko"],

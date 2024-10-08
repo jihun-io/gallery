@@ -1,12 +1,13 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="py-9">
       <Link href="/">
         <h1>
-          <Image
+          <img
             src="/images/logo-txt.svg"
             alt="gallery.jihun.io"
             width={257}

@@ -54,6 +54,7 @@ export async function PhotosList() {
             key={index}
             index={index}
             fileName={photo.fileName}
+            src={photo.src}
             title={photo.title}
             dateTimeObj={photo.dateTimeObj}
             make={photo.make}
