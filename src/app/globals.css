@@ -27,6 +27,10 @@ body {
   font-weight: 500;
 }
 
+img.thumbnail {
+  -webkit-touch-callout: none;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
