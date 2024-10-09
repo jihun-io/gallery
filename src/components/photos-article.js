@@ -119,12 +119,10 @@ export default function PhotosArticle({
                 width - height < 0 && "h-full max-w-min"
               }`}
             >
-              <img
-                src={encodeURI(`/photos/originals/${src}`)}
-                loader={defaultLoader}
+              <OptimizedImage
+                source={src}
+                fileName={fileName}
                 alt={title}
-                sizes="100vw"
-                loading="lazy"
                 style={{ aspectRatio: `${width}/${height}`, height: `100%` }}
                 className="object-contain z-50"
               />
