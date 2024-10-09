@@ -4,6 +4,7 @@ import sharp from "sharp";
 import fetch from "node-fetch";
 import { fileURLToPath } from "url";
 import { encodeFilename } from "../utils/filenameEncoding.js";
+import env from "./loadEnv.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,7 @@ const OUTPUT_JSON = path.join(process.cwd(), "public", "photoName.json");
 const sizes = [320, 640, 1024, 1920];
 const formats = ["webp", "jpg"];
 
-const WORKER_URL = "https://galleryjihuniophotos.ztqckg569b.workers.dev";
+const WORKER_URL = env.CDN_URL;
 
 // 파일명 매핑을 저장할 객체
 let fileNameMapping = [];
