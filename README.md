@@ -14,3 +14,9 @@
 ## 추가 예정 기능
 - 이미지 목록 무한 스크롤 기능 혹은 '더 보기' 버튼
 - 이미지 태그 기능
+
+## 기술 스택
+- Next.js
+- Tailwind CSS
+- Cloudflare Pages
+- Cloudflare R2
