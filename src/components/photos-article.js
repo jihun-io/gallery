@@ -89,7 +89,9 @@ export default function PhotosArticle({
             style={{
               aspectRatio: `${width}/${height}`,
             }}
-            className="relative h-full"
+            className={`relative flex justify-center items-center ${
+              width - height < 0 ? "h-full" : "w-full"
+            }`}
           >
             <OptimizedImage
               source={src}
@@ -116,7 +118,7 @@ export default function PhotosArticle({
                 aspectRatio: `${width}/${height}`,
               }}
               className={`flex justify-center items-center relative w-full ${
-                width - height < 0 && "h-full max-w-min"
+                width - height < 0 ? "h-full max-w-min" : "w-full"
               }`}
             >
               <OptimizedImage

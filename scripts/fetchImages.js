@@ -71,9 +71,12 @@ async function optimizeImage(imageBuffer, fileName) {
 
   let optimized = false;
   const encodedFileName = encodeFilename(fileName);
+  let generatedSizes = [];
 
   for (const size of sizes) {
     if (size > metadata.width) continue;
+
+    let sizeGenerated = false;
 
     for (const format of formats) {
       const outputFileName = `${
@@ -83,6 +86,7 @@ async function optimizeImage(imageBuffer, fileName) {
 
       if (await fileExists(outputPath)) {
         console.log(`Optimized version already exists: ${outputFileName}`);
+        sizeGenerated = true;
         continue;
       }
 
@@ -93,10 +97,15 @@ async function optimizeImage(imageBuffer, fileName) {
 
       console.log(`Optimized: ${outputFileName}`);
       optimized = true;
+      sizeGenerated = true;
+    }
+
+    if (sizeGenerated) {
+      generatedSizes.push(size);
     }
   }
 
-  return optimized;
+  return { optimized, generatedSizes };
 }
 
 async function processFiles(files) {
@@ -111,22 +120,27 @@ async function processFiles(files) {
     if (await fileExists(originalPath)) {
       console.log(`Using existing original: ${file.name}`);
       imageBuffer = await fs.readFile(originalPath);
-      // 기존 파일에 대한 매핑 추가
-      fileNameMapping.push({
-        title: file.name,
-        filename: encodeFilename(file.name),
-      });
     } else {
       console.log(`Downloading: ${file.name}`);
       imageBuffer = await downloadImage(`${WORKER_URL}${file.url}`);
       await saveOriginalImage(imageBuffer, file.name);
     }
 
-    const optimized = await optimizeImage(imageBuffer, file.name);
+    const { optimized, generatedSizes } = await optimizeImage(
+      imageBuffer,
+      file.name
+    );
 
     if (!optimized) {
       console.log(`All optimized versions already exist for: ${file.name}`);
     }
+
+    // 파일명 매핑에 생성된 크기 정보 추가
+    fileNameMapping.push({
+      title: path.parse(file.name).name,
+      filename: encodeFilename(file.name),
+      sizes: generatedSizes,
+    });
   }
 }
 
