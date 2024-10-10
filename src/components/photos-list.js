@@ -56,6 +56,7 @@ export async function PhotosList() {
             fileName={photo.fileName}
             src={photo.src}
             title={photo.title}
+            sizes={photo.sizes}
             dateTimeObj={photo.dateTimeObj}
             make={photo.make}
             model={photo.model}

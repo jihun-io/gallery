@@ -2,12 +2,7 @@
 
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import OptimizedImage from "../components/optimized-image";
-
-const defaultLoader = ({ src, width, quality }) => {
-  return `${src}`;
-};
 
 export default function PhotosArticle({
   key,
@@ -15,6 +10,7 @@ export default function PhotosArticle({
   fileName,
   src,
   title,
+  sizes,
   dateTimeObj,
   make,
   model,
@@ -97,6 +93,7 @@ export default function PhotosArticle({
               source={src}
               fileName={fileName}
               alt={title}
+              sizes={sizes}
               fill={true}
               style={{ width: "100%", aspectRatio: `${width}/${height}` }}
               className="thumbnail object-contain"
