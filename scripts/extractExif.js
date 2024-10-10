@@ -42,6 +42,8 @@ async function getExifData(filePath, fileNameMapping) {
     const mappingEntry = fileNameMapping.find(
       (entry) => entry.filename === fileName
     );
+
+    const sizes = mappingEntry.sizes;
     const title = mappingEntry ? mappingEntry.title : fileName;
 
     return {
@@ -51,6 +53,7 @@ async function getExifData(filePath, fileNameMapping) {
         .replace(/\.[^/.]+$/, "")
         .replace(/--/g, ": ")
         .replace(/-/g, " "),
+      sizes: sizes,
       make: tags.Make?.description,
       model: tags.Model?.description,
       dateTime: tags.DateTime?.description,
