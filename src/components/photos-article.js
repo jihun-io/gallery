@@ -122,6 +122,7 @@ export default function PhotosArticle({
                 source={src}
                 fileName={fileName}
                 alt={title}
+                sizes={sizes}
                 style={{ aspectRatio: `${width}/${height}`, height: `100%` }}
                 className="object-contain z-50"
               />
