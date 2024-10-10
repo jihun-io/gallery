@@ -6,10 +6,9 @@ const OptimizedImage = ({ source, alt, sizes, style, className }) => {
     <img
       src={`/photos/originals/${source}`}
       alt={alt}
-      sizes={sizes}
       className={className}
       style={style}
-      srcSet={getSrcSet(source)}
+      srcSet={getSrcSet(source, sizes)}
       loading="lazy"
     />
   );
