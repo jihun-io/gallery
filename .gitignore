@@ -39,3 +39,9 @@ public/exif-data.json
 /.wrangler
 public/photoName.json
 /public/photos-r2-storage
+
+# idea
+.idea
+
+# claude
+.claude
