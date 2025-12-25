@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  gallery:
+    image: ghcr.io/jihunio/gallery:latest
+    container_name: gallery-app
+    restart: unless-stopped
+
+    ports:
+      - "3001:3001"
+
+    env_file:
+      - .env.production
+
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOSTNAME=0.0.0.0
+
+    volumes:
+      # PM2 logs
+      - ./logs:/app/logs
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    labels:
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+
+    # Resource limits (adjust based on your Synology resources)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: gallery-watchtower
+    restart: unless-stopped
+
+    volumes:
+      # Docker socket access (required for Watchtower)
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    environment:
+      # Check for updates every 5 minutes
+      - WATCHTOWER_POLL_INTERVAL=300
+      # Only monitor containers with the label
+      - WATCHTOWER_LABEL_ENABLE=true
+      # Clean up old images after update
+      - WATCHTOWER_CLEANUP=true
+      # Include stopped containers
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      # Run once and exit (set to false for continuous monitoring)
+      - WATCHTOWER_RUN_ONCE=false
+      # Notification settings (optional)
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=${WATCHTOWER_NOTIFICATION_URL:-}
+      # Rolling restart strategy
+      - WATCHTOWER_ROLLING_RESTART=true
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
