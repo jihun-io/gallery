@@ -13,6 +13,9 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: "gallery.jihun.io",
   description: "jihun의 사진 갤러리.",
+  icons: {
+    icon: "/images/gallery-icon.svg",
+  },
 };
 
 export default function RootLayout({
