@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Image as ImageIcon, Plus } from 'lucide-react';
 import ImageFilters from './ImageFilters';
 
@@ -110,12 +109,11 @@ export default async function ImagesPage({
                 className="group relative aspect-square bg-gray-100 rounded-lg overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
               >
                 {image.thumbnailUrl || image.imageUrl ? (
-                  <Image
+                  <img
                     src={image.thumbnailUrl || image.imageUrl}
                     alt={image.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    loading="lazy"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">

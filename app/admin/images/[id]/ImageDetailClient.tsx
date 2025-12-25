@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { Trash2, Save, ArrowLeft, Loader2, Camera, MapPin } from 'lucide-react';
 import { getErrorMessage } from '@/lib/utils';
 import type { ImageMetadata } from '@/types';
@@ -151,12 +150,11 @@ export default function ImageDetailClient({ image, categories, tags }: Props) {
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">이미지</h2>
             <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
-              <Image
+              <img
                 src={image.imageUrl}
                 alt={image.title}
-                fill
-                className="object-contain"
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                loading="lazy"
+                className="w-full h-full object-contain"
               />
             </div>
             {image.metadata && (

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { ImageWithRelations, AdjacentImages } from "@/types/gallery";
 import ExifDisplay from "./ExifDisplay";
 import PhotoNavigation from "./PhotoNavigation";
@@ -40,13 +39,10 @@ export default function PhotoDetail({
             {/* Image */}
             <section className="space-y-4" aria-label="사진 표시">
               <figure className="relative w-full aspect-[4/3] h-[calc(100vh-300px)] bg-zinc-900 rounded-lg overflow-hidden">
-                <Image
+                <img
                   src={image.imageUrl}
                   alt={image.description || image.title}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                  priority
+                  className="w-full h-full object-contain"
                 />
               </figure>
             </section>

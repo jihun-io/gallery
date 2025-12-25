@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Category, Image as PrismaImage } from "@prisma/client";
 
 interface CategoryWithImages extends Category {
@@ -51,12 +50,11 @@ export default function CategoryGrid({ categories }: Props) {
                   key={image.id}
                   className="relative bg-zinc-800 overflow-hidden"
                 >
-                  <Image
+                  <img
                     src={image.thumbnailUrl || image.imageUrl}
                     alt=""
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-200"
-                    sizes="(max-width: 768px) 25vw, 12vw"
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                 </div>
               ))}
