@@ -32,6 +32,9 @@ COPY package.json package-lock.json* ./
 # Install all dependencies (including dev dependencies)
 RUN npm ci
 
+# Force reinstall lightningcss for Linux
+RUN npm rebuild lightningcss --force
+
 # Copy source files
 COPY . .
 
