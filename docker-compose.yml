@@ -50,6 +50,7 @@ services:
       - PORT=3001
       - HOSTNAME=0.0.0.0
       - PM2_HOME=/app/logs/.pm2
+      - AUTH_TRUST_HOST=true
 
     volumes:
       # PM2 logs
