@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { Category, Image as PrismaImage } from '@prisma/client';
+import Link from "next/link";
+import Image from "next/image";
+import { Category, Image as PrismaImage } from "@prisma/client";
 
 interface CategoryWithImages extends Category {
   images: PrismaImage[];
@@ -13,7 +13,10 @@ interface Props {
 export default function CategoryGrid({ categories }: Props) {
   if (categories.length === 0) {
     return (
-      <section className="flex items-center justify-center min-h-[50vh]" aria-label="빈 카테고리">
+      <section
+        className="flex items-center justify-center min-h-[50vh]"
+        aria-label="빈 카테고리"
+      >
         <p className="text-zinc-400 text-lg">No categories yet</p>
       </section>
     );
@@ -33,7 +36,7 @@ export default function CategoryGrid({ categories }: Props) {
           >
             {/* Category title overlay */}
             <header className="absolute top-0 left-0 right-0 z-10 p-4 bg-gradient-to-b from-black/80 to-transparent">
-              <h2 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+              <h2 className="text-lg font-bold text-white transition-colors">
                 {category.name}
               </h2>
               <p className="text-zinc-400 text-xs mt-1">
@@ -59,15 +62,14 @@ export default function CategoryGrid({ categories }: Props) {
               ))}
 
               {/* Show placeholder for missing images */}
-              {Array.from({ length: Math.max(0, 4 - category.images.length) }).map(
-                (_, idx) => (
-                  <div
-                    key={`placeholder-${idx}`}
-                    className="bg-zinc-900/50 flex items-center justify-center"
-                  >
-                  </div>
-                )
-              )}
+              {Array.from({
+                length: Math.max(0, 4 - category.images.length),
+              }).map((_, idx) => (
+                <div
+                  key={`placeholder-${idx}`}
+                  className="bg-zinc-900/50 flex items-center justify-center"
+                ></div>
+              ))}
             </figure>
 
             {/* Hover overlay */}
