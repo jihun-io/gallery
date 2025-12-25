@@ -1,10 +1,43 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: gallery-postgres
+    restart: unless-stopped
+
+    ports:
+      - "54322:5432"
+
+    environment:
+      - POSTGRES_DB=gallery
+      - POSTGRES_USER=jihunio
+      - POSTGRES_PASSWORD=ASdZQgEChovkjdpnAdGzn7da
+
+    volumes:
+      # PostgreSQL data persistence
+      - ./postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jihunio -d gallery"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   gallery:
-    image: ghcr.io/jihunio/gallery:latest
+    image: ghcr.io/jihun-io/gallery:latest
     container_name: gallery-app
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
 
     ports:
       - "3001:3001"
@@ -16,6 +49,7 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - HOSTNAME=0.0.0.0
+      - PM2_HOME=/app/logs/.pm2
 
     volumes:
       # PM2 logs
@@ -32,15 +66,9 @@ services:
       # Watchtower labels
       - "com.centurylinklabs.watchtower.enable=true"
 
-    # Resource limits (adjust based on your Synology resources)
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 1024M
-        reservations:
-          cpus: '0.5'
-          memory: 512M
+    # Memory limit (Synology compatible)
+    mem_limit: 1024m
+    mem_reservation: 512m
 
     # Logging configuration
     logging:
