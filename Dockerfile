@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies
-RUN npm ci --only=production --ignore-scripts && \
+# Install production dependencies
+RUN npm install --production --ignore-scripts && \
     npm cache clean --force
 
 # Stage 2: Builder
@@ -30,10 +30,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Install all dependencies (including dev dependencies)
-RUN npm ci
-
-# Force reinstall lightningcss for Linux
-RUN npm rebuild lightningcss --force
+# Use npm install instead of npm ci to ensure platform-specific binaries
+RUN npm install --include=dev
 
 # Copy source files
 COPY . .
