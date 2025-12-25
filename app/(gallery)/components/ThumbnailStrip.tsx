@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface ThumbnailImage {
@@ -53,12 +52,11 @@ export default function ThumbnailStrip({
                   : "opacity-60 hover:opacity-100"
               }`}
             >
-              <Image
+              <img
                 src={img.thumbnailUrl || img.imageUrl}
                 alt=""
-                fill
-                className="object-cover"
-                sizes="80px"
+                loading="lazy"
+                className="w-full h-full object-cover"
               />
             </Link>
           ))}

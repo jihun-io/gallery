@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ImageWithRelations } from "@/types/gallery";
 import { getPhotoPath } from "@/lib/gallery-utils";
@@ -17,12 +16,11 @@ export default function PhotoCard({ image, showCategory = false }: Props) {
       aria-label={`사진 보기: ${image.title}`}
     >
       <figure className="relative w-full h-full">
-        <Image
+        <img
           src={image.thumbnailUrl || image.imageUrl}
           alt={image.description || image.title}
-          fill
-          className="object-cover transition-transform duration-200 group-hover:scale-105"
-          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
         />
 
         {/* Hover overlay */}
