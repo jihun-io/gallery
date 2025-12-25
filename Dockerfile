@@ -1,6 +1,9 @@
 # Stage 1: Dependencies
-FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat openssl
+FROM node:20-slim AS deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -12,8 +15,14 @@ RUN npm ci --only=production --ignore-scripts && \
     npm cache clean --force
 
 # Stage 2: Builder
-FROM node:20-alpine AS builder
-RUN apk add --no-cache libc6-compat openssl
+FROM node:20-slim AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openssl \
+    ca-certificates \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -36,8 +45,12 @@ ENV NODE_ENV=production
 RUN npm run build
 
 # Stage 3: Production
-FROM node:20-alpine AS runner
-RUN apk add --no-cache curl openssl
+FROM node:20-slim AS runner
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
