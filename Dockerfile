@@ -13,7 +13,12 @@ RUN npm ci --only=production --ignore-scripts && \
 
 # Stage 2: Builder
 FROM node:20-alpine AS builder
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache \
+    libc6-compat \
+    openssl \
+    python3 \
+    make \
+    g++
 
 WORKDIR /app
 
@@ -22,6 +27,9 @@ COPY package.json package-lock.json* ./
 
 # Install all dependencies (including dev dependencies)
 RUN npm ci
+
+# Rebuild native modules for Alpine
+RUN npm rebuild
 
 # Copy source files
 COPY . .
