@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json* ./
+COPY package.json ./
 
 # Install production dependencies
-RUN npm install --production --ignore-scripts && \
+RUN npm install --production --force && \
     npm cache clean --force
 
 # Stage 2: Builder
@@ -27,11 +27,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json* ./
+COPY package.json ./
 
 # Install all dependencies (including dev dependencies)
-# Use npm install instead of npm ci to ensure platform-specific binaries
-RUN npm install --include=dev
+# Remove lock file and install fresh for Linux platform
+RUN npm install --include=dev --force
 
 # Copy source files
 COPY . .
