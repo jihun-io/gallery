@@ -1,22 +1,36 @@
-# gallery.jihun.io
-<img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=Next.js&logoColor=white"/> <img src="https://img.shields.io/badge/Tailwind CSS-06B6D4?style=flat-square&logo=Tailwind CSS&logoColor=white"/>
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-<img src="https://github.com/user-attachments/assets/f1cd7207-408b-4064-ae6d-34ee27fbef07" width=640 />
+## Getting Started
 
-사진 찍는 개발자 jihun의 사진 갤러리입니다.
+First, run the development server:
 
-보러 가기: https://gallery.jihun.io
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## 기능
-- 반응형 이미지를 사용하여 데이터 송수신과 로드 시간을 절약합니다.
-- 사진의 EXIF 데이터 일부를 보여 줍니다.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 추가 예정 기능
-- 이미지 목록 무한 스크롤 기능 혹은 '더 보기' 버튼
-- 이미지 카테고리 혹은 태그 기능
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 기술 스택
-- Next.js
-- Tailwind CSS
-- Cloudflare Pages
-- Cloudflare R2
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

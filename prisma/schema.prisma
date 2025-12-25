@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(EDITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+model Category {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String?  @db.Text
+  coverImageUrl String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  images        Image[]
+
+  @@map("categories")
+  @@index([slug])
+  @@index([order])
+}
+
+model Image {
+  id           String     @id @default(cuid())
+  title        String
+  description  String?    @db.Text
+  imageUrl     String
+  thumbnailUrl String?
+  categoryId   String
+  uploadedAt   DateTime   @default(now())
+  captureDate  DateTime   @default(now())
+  metadata     Json?
+
+  category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tags         ImageTag[]
+
+  @@map("images")
+  @@index([categoryId])
+  @@index([uploadedAt])
+  @@index([captureDate])
+  @@index([categoryId, captureDate])
+}
+
+model Tag {
+  id     String     @id @default(cuid())
+  name   String     @unique
+  slug   String     @unique
+  images ImageTag[]
+
+  @@map("tags")
+  @@index([slug])
+}
+
+model ImageTag {
+  imageId String
+  tagId   String
+
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([imageId, tagId])
+  @@map("image_tags")
+  @@index([imageId])
+  @@index([tagId])
+}
