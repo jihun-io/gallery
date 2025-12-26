@@ -57,9 +57,29 @@ jobs:
       - name: Image digest
         run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"
 
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/gallery-jihun-io
+            echo "🔄 Pulling latest image..."
+            docker compose pull gallery
+            echo "🚀 Starting container with new image..."
+            docker compose up -d --no-deps gallery
+            echo "⏳ Waiting for container to be ready..."
+            sleep 5
+            echo "♻️  PM2 zero-downtime reload..."
+            docker exec gallery-app pm2 reload ecosystem.config.js --update-env
+            echo "✅ Deployment completed!"
+            docker compose ps
+            docker exec gallery-app pm2 list
+
       - name: Deployment info
         run: |
           echo "✅ Docker image successfully built and pushed to GHCR!"
           echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          echo "🔄 Watchtower will automatically detect and deploy this update within 5 minutes."
-          echo "🌐 Check your Synology DSM Docker to monitor the deployment."
+          echo "🚀 Deployed to server with zero-downtime PM2 reload!"
