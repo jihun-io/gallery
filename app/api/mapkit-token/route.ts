@@ -36,7 +36,16 @@ export async function GET(request: NextRequest) {
       .setExpirationTime(now + 3600) // 1 hour in seconds
       .sign(key);
 
-    return NextResponse.json({ token });
+    return NextResponse.json(
+      { token },
+      {
+        headers: {
+          "Cache-Control": "private, no-cache, no-store, must-revalidate, max-age=0",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        },
+      }
+    );
   } catch (error) {
     console.error("MapKit token generation error:", error);
     return NextResponse.json(
