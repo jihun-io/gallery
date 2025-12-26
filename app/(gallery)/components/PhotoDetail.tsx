@@ -19,26 +19,19 @@ interface Props {
   allImages: ThumbnailImage[];
 }
 
-export default function PhotoDetail({
-  image,
-  adjacentIds,
-  allImages,
-}: Props) {
+export default function PhotoDetail({ image, adjacentIds, allImages }: Props) {
   return (
     <main className="h-full grid grid-rows-[1fr_auto]">
       {/* Main content area */}
       <div className="overflow-y-auto flex flex-col">
         {/* Navigation chevrons */}
-        <PhotoNavigation
-          prev={adjacentIds.prev}
-          next={adjacentIds.next}
-        />
+        <PhotoNavigation prev={adjacentIds.prev} next={adjacentIds.next} />
 
         <article className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 gap-8">
             {/* Image */}
             <section className="space-y-4" aria-label="사진 표시">
-              <figure className="relative w-full aspect-[4/3] h-[calc(100vh-300px)] bg-zinc-900 rounded-lg overflow-hidden">
+              <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
                 <img
                   src={image.imageUrl}
                   alt={image.description || image.title}
@@ -57,10 +50,7 @@ export default function PhotoDetail({
 
       {/* Thumbnail strip at bottom */}
       <nav aria-label="사진 탐색" className="max-w-full overflow-hidden">
-        <ThumbnailStrip
-          images={allImages}
-          currentId={image.id}
-        />
+        <ThumbnailStrip images={allImages} currentId={image.id} />
       </nav>
     </main>
   );
