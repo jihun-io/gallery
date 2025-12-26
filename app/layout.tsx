@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: "jihun의 사진 갤러리.",
     images: [
       {
-        url: "/images/og-image.png",
+        url: "https://gallery.jihun.io/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "gallery.jihun.io",
