@@ -14,9 +14,19 @@ declare global {
   }
 }
 
-// Global token fetcher to prevent duplicate requests
+// Global token cache with expiration tracking
+let cachedToken: { token: string; expiresAt: number } | null = null;
 let tokenPromise: Promise<string> | null = null;
+
 const fetchToken = async (): Promise<string> => {
+  const now = Math.floor(Date.now() / 1000);
+
+  // Return cached token if it's still valid (with 5 minute buffer)
+  if (cachedToken && cachedToken.expiresAt - now > 300) {
+    return cachedToken.token;
+  }
+
+  // Prevent duplicate requests while fetching
   if (!tokenPromise) {
     tokenPromise = fetch("/api/mapkit-token")
       .then((response) => {
@@ -29,6 +39,12 @@ const fetchToken = async (): Promise<string> => {
         if (!data.token) {
           throw new Error("No token in response");
         }
+        // Cache the token with expiration time
+        cachedToken = {
+          token: data.token,
+          expiresAt: now + 3600, // 1 hour from now
+        };
+        tokenPromise = null; // Reset promise for next refresh
         return data.token;
       })
       .catch((error) => {
