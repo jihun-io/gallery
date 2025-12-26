@@ -1,7 +1,7 @@
 import { SignJWT, importPKCS8 } from "jose";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const teamId = process.env.MAPKIT_TEAM_ID;
     const keyId = process.env.MAPKIT_KEY_ID;
@@ -14,13 +14,17 @@ export async function GET() {
       );
     }
 
+    // Get origin from request headers or environment variable
+    const requestOrigin = request.headers.get("origin");
+    const origin = requestOrigin || process.env.NEXT_PUBLIC_SITE_URL || "https://gallery.jihun.io";
+
     // Import the private key
     const key = await importPKCS8(privateKey, "ES256");
 
     // Create JWT token with explicit timestamps to avoid server time issues
     const now = Math.floor(Date.now() / 1000);
     const token = await new SignJWT({
-      origin: process.env.NEXT_PUBLIC_SITE_URL,
+      origin: origin,
     })
       .setProtectedHeader({
         alg: "ES256",
