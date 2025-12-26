@@ -17,16 +17,19 @@ export async function GET() {
     // Import the private key
     const key = await importPKCS8(privateKey, "ES256");
 
-    // Create JWT token
-    const token = await new SignJWT({})
+    // Create JWT token with explicit timestamps to avoid server time issues
+    const now = Math.floor(Date.now() / 1000);
+    const token = await new SignJWT({
+      origin: process.env.NEXT_PUBLIC_SITE_URL,
+    })
       .setProtectedHeader({
         alg: "ES256",
         kid: keyId,
         typ: "JWT",
       })
       .setIssuer(teamId)
-      .setIssuedAt()
-      .setExpirationTime("1h")
+      .setIssuedAt(now)
+      .setExpirationTime(now + 3600) // 1 hour in seconds
       .sign(key);
 
     return NextResponse.json({ token });
