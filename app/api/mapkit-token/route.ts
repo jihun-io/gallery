@@ -1,6 +1,10 @@
 import { SignJWT, importPKCS8 } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
+// Disable caching for this route
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   try {
     const teamId = process.env.MAPKIT_TEAM_ID;
