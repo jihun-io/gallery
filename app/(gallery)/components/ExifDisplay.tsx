@@ -77,7 +77,7 @@ export default function ExifDisplay({ image }: Props) {
                 <div className="flex flex-col">
                   <span className="text-zinc-400 text-sm">조리개</span>
                   <span className="text-white font-medium">
-                    f/{exif.fNumber}
+                    f/{exif.fNumber.toFixed(1)}
                   </span>
                 </div>
               )}
