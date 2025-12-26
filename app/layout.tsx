@@ -18,6 +18,18 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/gallery-icon.svg",
   },
+  openGraph: {
+    title: "gallery.jihun.io",
+    description: "jihun의 사진 갤러리.",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "gallery.jihun.io",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
