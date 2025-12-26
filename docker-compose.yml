@@ -63,10 +63,6 @@ services:
       retries: 3
       start_period: 40s
 
-    labels:
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
-
     # Memory limit (Synology compatible)
     mem_limit: 1024m
     mem_reservation: 512m
@@ -77,35 +73,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-  watchtower:
-    image: containrrr/watchtower:latest
-    container_name: gallery-watchtower
-    restart: unless-stopped
-
-    volumes:
-      # Docker socket access (required for Watchtower)
-      - /var/run/docker.sock:/var/run/docker.sock
-
-    environment:
-      # Check for updates every 5 minutes
-      - WATCHTOWER_POLL_INTERVAL=300
-      # Only monitor containers with the label
-      - WATCHTOWER_LABEL_ENABLE=true
-      # Clean up old images after update
-      - WATCHTOWER_CLEANUP=true
-      # Include stopped containers
-      - WATCHTOWER_INCLUDE_STOPPED=true
-      # Run once and exit (set to false for continuous monitoring)
-      - WATCHTOWER_RUN_ONCE=false
-      # Notification settings (optional)
-      - WATCHTOWER_NOTIFICATIONS=shoutrrr
-      - WATCHTOWER_NOTIFICATION_URL=${WATCHTOWER_NOTIFICATION_URL:-}
-      # Rolling restart strategy
-      - WATCHTOWER_ROLLING_RESTART=true
-
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "5m"
-        max-file: "2"
