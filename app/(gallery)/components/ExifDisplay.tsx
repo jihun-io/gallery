@@ -19,7 +19,7 @@ export default function ExifDisplay({ image }: Props) {
     <article className="bg-zinc-900 rounded-lg p-6 space-y-4">
       {/* Category */}
       <section
-        className="flex justify-between border-b border-zinc-700 pb-3"
+        className="flex justify-between border-b border-zinc-700 pb-3 gap-x-8"
         aria-label="카테고리 정보"
       >
         <span className="text-zinc-400">카테고리</span>
@@ -28,7 +28,7 @@ export default function ExifDisplay({ image }: Props) {
 
       {/* Capture Date */}
       <section
-        className="flex justify-between border-b border-zinc-700 pb-3"
+        className="flex justify-between border-b border-zinc-700 pb-3 gap-x-8"
         aria-label="촬영 정보"
       >
         <span className="text-zinc-400">촬영 일자</span>
