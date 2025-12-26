@@ -22,3 +22,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-pretendard), Arial, Helvetica, sans-serif;
 }
+
+img {
+  color: transparent;
+}
