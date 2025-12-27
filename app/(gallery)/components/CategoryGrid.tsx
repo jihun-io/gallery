@@ -3,6 +3,9 @@ import { Category, Image as PrismaImage } from "@prisma/client";
 
 interface CategoryWithImages extends Category {
   images: PrismaImage[];
+  _count: {
+    images: number;
+  };
 }
 
 interface Props {
@@ -39,7 +42,7 @@ export default function CategoryGrid({ categories }: Props) {
                 {category.name}
               </h2>
               <p className="text-zinc-400 text-xs mt-1">
-                {category.images.length}개의 사진
+                {category._count.images}개의 사진
               </p>
             </header>
 
