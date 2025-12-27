@@ -47,7 +47,7 @@ export default function CategoryGrid({ categories }: Props) {
             </header>
 
             {/* 2x2 grid of preview images */}
-            <figure className="grid grid-cols-2 gap-0.5 h-full">
+            <figure className="grid grid-cols-2 grid-rows-2 gap-0.5 h-full">
               {category.images.slice(0, 4).map((image) => (
                 <div
                   key={image.id}
