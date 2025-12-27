@@ -5,15 +5,16 @@ import { getPhotoPath } from "@/lib/gallery-utils";
 interface Props {
   image: ImageWithRelations;
   showCategory?: boolean;
+  index?: number;
 }
 
-export default function PhotoCard({ image, showCategory = false }: Props) {
+export default function PhotoCard({ image, showCategory = false, index }: Props) {
   return (
     <Link
       href={getPhotoPath(image)}
       scroll={false}
       className="group relative aspect-square overflow-hidden rounded-lg bg-zinc-900 block"
-      aria-label={`사진 보기: ${image.title}`}
+      aria-label={`사진 보기: ${image.category.name}${index !== undefined ? `, ${index + 1}번째 사진` : ''}`}
     >
       <figure className="relative w-full h-full">
         <img

@@ -15,18 +15,39 @@ export default function PhotoGrid({ images, showCategory = false }: Props) {
     );
   }
 
+  // 각 카테고리별 총 사진 개수 계산
+  const categoryCountMap = new Map<string, number>();
+  images.forEach((image) => {
+    const categoryId = image.category.id;
+    categoryCountMap.set(categoryId, (categoryCountMap.get(categoryId) || 0) + 1);
+  });
+
+  // 각 카테고리별 현재 인덱스 추적
+  const categoryIndexMap = new Map<string, number>();
+
   return (
     <section
       className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
       aria-label="사진 갤러리 그리드"
     >
-      {images.map((image) => (
-        <PhotoCard
-          key={image.id}
-          image={image}
-          showCategory={showCategory}
-        />
-      ))}
+      {images.map((image) => {
+        const categoryId = image.category.id;
+        const currentIndex = categoryIndexMap.get(categoryId) || 0;
+        categoryIndexMap.set(categoryId, currentIndex + 1);
+
+        // 역순 인덱스 계산: 총 개수 - 현재 인덱스
+        const totalCount = categoryCountMap.get(categoryId) || 0;
+        const reverseIndex = totalCount - currentIndex - 1;
+
+        return (
+          <PhotoCard
+            key={image.id}
+            image={image}
+            showCategory={showCategory}
+            index={reverseIndex}
+          />
+        );
+      })}
     </section>
   );
 }
