@@ -8,14 +8,17 @@ export default async function CategoriesPage() {
         take: 4,
         orderBy: { uploadedAt: "desc" },
       },
+      _count: {
+        select: { images: true },
+      },
     },
-    orderBy: { order: "asc" },
+    orderBy: { order: "desc" },
   });
 
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">카테고리</h1>
-      <CategoryGrid categories={categories.reverse()} />
+      <CategoryGrid categories={categories} />
     </main>
   );
 }
