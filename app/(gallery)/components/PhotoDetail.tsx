@@ -2,7 +2,6 @@
 
 import { ImageWithRelations, AdjacentImages } from "@/types/gallery";
 import ExifDisplay from "./ExifDisplay";
-import PhotoNavigation from "./PhotoNavigation";
 
 interface Props {
   image?: ImageWithRelations | null;
@@ -10,14 +9,13 @@ interface Props {
   isLoading?: boolean;
 }
 
-export default function PhotoDetail({ image, adjacentIds, isLoading = false }: Props) {
+export default function PhotoDetail({
+  image,
+  adjacentIds,
+  isLoading = false,
+}: Props) {
   return (
     <div className="overflow-y-auto flex flex-col h-full">
-      {/* Navigation chevrons */}
-      {adjacentIds && (
-        <PhotoNavigation prev={adjacentIds.prev} next={adjacentIds.next} />
-      )}
-
       <article className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 gap-8">
           {/* Image */}
