@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ interface Props {
   next?: { categorySlug: string; timestamp: string } | null;
 }
 
-export default function PhotoNavigation({ prev, next }: Props) {
+function PhotoNavigation({ prev, next }: Props) {
   const router = useRouter();
 
   const getPhotoPath = (item: { categorySlug: string; timestamp: string }) => {
@@ -60,3 +60,5 @@ export default function PhotoNavigation({ prev, next }: Props) {
     </>
   );
 }
+
+export default memo(PhotoNavigation);

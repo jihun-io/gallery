@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { sortByCapture, formatTimestamp } from '@/lib/gallery-utils';
 import PhotoDetail from '../../../components/PhotoDetail';
+import ThumbnailStrip from '../../../components/ThumbnailStrip';
 
 export default async function PhotoDetailPage({
   params,
@@ -80,17 +81,23 @@ export default async function PhotoDetailPage({
         : null,
   };
 
+  const allImages = sortedImages.map((img) => ({
+    id: img.id,
+    categorySlug: img.category.slug,
+    timestamp: formatTimestamp(new Date(img.captureDate)),
+    thumbnailUrl: img.thumbnailUrl,
+    imageUrl: img.imageUrl,
+  }));
+
   return (
-    <PhotoDetail
-      image={image}
-      adjacentIds={adjacentIds}
-      allImages={sortedImages.map((img) => ({
-        id: img.id,
-        categorySlug: img.category.slug,
-        timestamp: formatTimestamp(new Date(img.captureDate)),
-        thumbnailUrl: img.thumbnailUrl,
-        imageUrl: img.imageUrl,
-      }))}
-    />
+    <main className="h-full grid grid-rows-[1fr_auto]">
+      {/* PhotoDetail - 이미지와 EXIF 정보 */}
+      <PhotoDetail image={image} adjacentIds={adjacentIds} />
+
+      {/* ThumbnailStrip - 썸네일 내비게이션 */}
+      <nav aria-label="사진 탐색" className="max-w-full overflow-hidden">
+        <ThumbnailStrip images={allImages} currentId={image.id} />
+      </nav>
+    </main>
   );
 }

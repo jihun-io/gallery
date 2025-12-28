@@ -1,35 +1,37 @@
-"use client";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ThumbnailStrip from "./ThumbnailStrip";
 
-import { ImageWithRelations, AdjacentImages } from "@/types/gallery";
-import ExifDisplay from "./ExifDisplay";
-import PhotoNavigation from "./PhotoNavigation";
-
-interface Props {
-  image?: ImageWithRelations | null;
-  adjacentIds?: AdjacentImages | null;
-  isLoading?: boolean;
+interface ThumbnailImage {
+  id: string;
+  categorySlug: string;
+  timestamp: string;
+  thumbnailUrl: string | null;
+  imageUrl: string;
 }
 
-export default function PhotoDetail({ image, adjacentIds, isLoading = false }: Props) {
-  return (
-    <div className="overflow-y-auto flex flex-col h-full">
-      {/* Navigation chevrons */}
-      {adjacentIds && (
-        <PhotoNavigation prev={adjacentIds.prev} next={adjacentIds.next} />
-      )}
+interface Props {
+  allImages?: ThumbnailImage[] | null;
+  currentId?: string | null;
+}
 
-      <article className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 gap-8">
-          {/* Image */}
-          <section className="space-y-4" aria-label="사진 표시">
-            <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
-              {image ? (
-                <img
-                  src={image.imageUrl}
-                  alt={image.description || image.title}
-                  className="w-full h-full object-contain"
-                />
-              ) : (
+export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
+  return (
+    <main className="h-full grid grid-rows-[1fr_auto]">
+      {/* Main content area */}
+      <div className="overflow-y-auto flex flex-col">
+        {/* Navigation chevrons - matching PhotoNavigation */}
+        <div className="fixed left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-zinc-900/80 backdrop-blur-sm rounded-full">
+          <ChevronLeft className="w-6 h-6" />
+        </div>
+        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-zinc-900/80 backdrop-blur-sm rounded-full">
+          <ChevronRight className="w-6 h-6" />
+        </div>
+
+        <article className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 gap-8">
+            {/* Image skeleton - matching PhotoDetail */}
+            <section className="space-y-4" aria-label="사진 로딩 중">
+              <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
                 <div className="w-full h-full bg-zinc-800 animate-pulse flex items-center justify-center">
                   <div className="text-zinc-600">
                     <svg
@@ -54,30 +56,33 @@ export default function PhotoDetail({ image, adjacentIds, isLoading = false }: P
                     </svg>
                   </div>
                 </div>
-              )}
-            </figure>
-          </section>
+              </figure>
+            </section>
 
-          {/* EXIF Info */}
-          <aside className="lg:col-span-1" aria-label="사진 정보">
-            {image ? (
-              <ExifDisplay image={image} />
-            ) : (
+            {/* EXIF Info skeleton - matching ExifDisplay */}
+            <aside className="lg:col-span-1" aria-label="사진 정보 로딩 중">
               <article className="bg-zinc-900 rounded-lg p-6 space-y-4">
+                {/* Category section */}
                 <section className="flex justify-between border-b border-zinc-700 pb-3 gap-x-8">
                   <div className="h-5 bg-zinc-800 rounded animate-pulse w-20" />
                   <div className="h-5 bg-zinc-800 rounded animate-pulse w-32" />
                 </section>
+
+                {/* Capture date section */}
                 <section className="flex justify-between border-b border-zinc-700 pb-3 gap-x-8">
                   <div className="h-5 bg-zinc-800 rounded animate-pulse w-20" />
                   <div className="h-5 bg-zinc-800 rounded animate-pulse w-48" />
                 </section>
+
+                {/* Camera section */}
                 <section className="border-zinc-700">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-4 h-4 bg-zinc-800 rounded animate-pulse" />
                     <div className="h-5 bg-zinc-800 rounded animate-pulse w-16" />
                   </div>
                   <div className="h-5 bg-zinc-800 rounded animate-pulse w-48 mb-3" />
+
+                  {/* Settings grid */}
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     {[...Array(4)].map((_, i) => (
                       <div key={i} className="flex flex-col">
@@ -88,10 +93,31 @@ export default function PhotoDetail({ image, adjacentIds, isLoading = false }: P
                   </div>
                 </section>
               </article>
-            )}
-          </aside>
-        </div>
-      </article>
-    </div>
+            </aside>
+          </div>
+        </article>
+      </div>
+
+      {/* Thumbnail strip - use real component if available to preserve scroll position */}
+      {allImages && currentId ? (
+        <ThumbnailStrip images={allImages} currentId={currentId} />
+      ) : (
+        <nav
+          aria-label="사진 탐색 로딩 중"
+          className="bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800"
+        >
+          <div className="overflow-x-auto">
+            <div className="flex gap-2 p-4 min-w-max">
+              {[...Array(10)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 w-20 h-20 bg-zinc-800 rounded animate-pulse"
+                />
+              ))}
+            </div>
+          </div>
+        </nav>
+      )}
+    </main>
   );
 }
