@@ -19,14 +19,6 @@ export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
     <main className="h-full grid grid-rows-[1fr_auto]">
       {/* Main content area */}
       <div className="overflow-y-auto flex flex-col">
-        {/* Navigation chevrons - matching PhotoNavigation */}
-        <div className="fixed left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-zinc-900/80 backdrop-blur-sm rounded-full">
-          <ChevronLeft className="w-6 h-6" />
-        </div>
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-zinc-900/80 backdrop-blur-sm rounded-full">
-          <ChevronRight className="w-6 h-6" />
-        </div>
-
         <article className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 gap-8">
             {/* Image skeleton - matching PhotoDetail */}
