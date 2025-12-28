@@ -80,6 +80,14 @@ export async function POST(req: NextRequest) {
     // Upload processed image (without EXIF)
     const imageUrl = await uploadToR2(processedBuffer, `images/${fileName}`, file.type);
 
+    // Generate WebP version of original image
+    const webpBuffer = await sharp(processedBuffer)
+      .webp({ quality: 90 })
+      .toBuffer();
+
+    const webpFileName = `${randomUUID()}.webp`;
+    const webpImageUrl = await uploadToR2(webpBuffer, `images/${webpFileName}`, 'image/webp');
+
     // Generate and upload thumbnail (also without EXIF)
     const thumbnailBuffer = await sharp(processedBuffer)
       .resize(400, 400, { fit: 'cover' })
@@ -90,6 +98,18 @@ export async function POST(req: NextRequest) {
       thumbnailBuffer,
       `thumbnails/${fileName}`,
       'image/jpeg'
+    );
+
+    // Generate WebP thumbnail
+    const webpThumbnailBuffer = await sharp(processedBuffer)
+      .resize(400, 400, { fit: 'cover' })
+      .webp({ quality: 85 })
+      .toBuffer();
+
+    const webpThumbnailUrl = await uploadToR2(
+      webpThumbnailBuffer,
+      `thumbnails/${webpFileName}`,
+      'image/webp'
     );
 
     // Get image dimensions
@@ -123,6 +143,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       imageUrl,
       thumbnailUrl,
+      webpImageUrl,
+      webpThumbnailUrl,
       metadata,
     });
   } catch (error) {

@@ -186,6 +186,8 @@ export default function ImageUploadPage() {
         description: formData.description,
         imageUrl: uploadData.imageUrl,
         thumbnailUrl: uploadData.thumbnailUrl,
+        webpImageUrl: uploadData.webpImageUrl,
+        webpThumbnailUrl: uploadData.webpThumbnailUrl,
         categoryId: formData.categoryId,
         metadata: metadata,
         tagIds: formData.tagIds,

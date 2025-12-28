@@ -13,6 +13,8 @@ export const imageSchema = z.object({
   description: z.string().optional().or(z.literal('')),
   imageUrl: z.string().url('Invalid image URL'),
   thumbnailUrl: z.string().url().optional().or(z.literal('')).nullable(),
+  webpImageUrl: z.string().url().optional().or(z.literal('')).nullable(),
+  webpThumbnailUrl: z.string().url().optional().or(z.literal('')).nullable(),
   categoryId: z.string().min(1, 'Category is required'),
   metadata: z.any().optional(),
   captureDate: z.coerce.date().optional(),

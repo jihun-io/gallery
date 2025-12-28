@@ -18,7 +18,7 @@ export default function PhotoCard({ image, showCategory = false, index }: Props)
     >
       <figure className="relative w-full h-full">
         <img
-          src={image.thumbnailUrl || image.imageUrl}
+          src={image.webpThumbnailUrl || image.thumbnailUrl || image.webpImageUrl || image.imageUrl}
           alt={image.description || image.title}
           loading="lazy"
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"

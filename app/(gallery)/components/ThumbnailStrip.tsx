@@ -9,6 +9,8 @@ interface ThumbnailImage {
   timestamp: string;
   thumbnailUrl: string | null;
   imageUrl: string;
+  webpThumbnailUrl?: string | null;
+  webpImageUrl?: string | null;
 }
 
 interface Props {
@@ -19,10 +21,7 @@ interface Props {
 // 스크롤 위치 캐시 - 컴포넌트가 리마운트되어도 유지
 let cachedScrollLeft = 0;
 
-function ThumbnailStrip({
-  images,
-  currentId,
-}: Props) {
+function ThumbnailStrip({ images, currentId }: Props) {
   const currentRef = useRef<HTMLAnchorElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isRestoringScrollRef = useRef(false);
@@ -90,7 +89,12 @@ function ThumbnailStrip({
               }`}
             >
               <img
-                src={img.thumbnailUrl || img.imageUrl}
+                src={
+                  img.webpThumbnailUrl ||
+                  img.thumbnailUrl ||
+                  img.webpImageUrl ||
+                  img.imageUrl
+                }
                 alt=""
                 loading="lazy"
                 className="w-full h-full object-cover"

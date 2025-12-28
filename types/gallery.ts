@@ -1,4 +1,4 @@
-import { Image, Category, Tag } from '@prisma/client';
+import { Image, Category, Tag } from "@prisma/client";
 
 export type ImageWithRelations = Image & {
   category: Category;
@@ -18,5 +18,13 @@ export interface PhotoGridProps {
 export interface PhotoDetailProps {
   image: ImageWithRelations;
   adjacentIds: AdjacentImages;
-  allImages: Array<{ id: string; categorySlug: string; timestamp: string; thumbnailUrl: string | null; imageUrl: string }>;
+  allImages: Array<{
+    id: string;
+    categorySlug: string;
+    timestamp: string;
+    thumbnailUrl: string | null;
+    imageUrl: string;
+    webpThumbnailUrl?: string | null;
+    webpImageUrl?: string | null;
+  }>;
 }

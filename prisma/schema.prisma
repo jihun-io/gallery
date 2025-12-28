@@ -43,15 +43,17 @@ model Category {
 }
 
 model Image {
-  id           String     @id @default(cuid())
-  title        String
-  description  String?    @db.Text
-  imageUrl     String
-  thumbnailUrl String?
-  categoryId   String
-  uploadedAt   DateTime   @default(now())
-  captureDate  DateTime   @default(now())
-  metadata     Json?
+  id               String     @id @default(cuid())
+  title            String
+  description      String?    @db.Text
+  imageUrl         String
+  thumbnailUrl     String?
+  webpImageUrl     String?
+  webpThumbnailUrl String?
+  categoryId       String
+  uploadedAt       DateTime   @default(now())
+  captureDate      DateTime   @default(now())
+  metadata         Json?
 
   category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   tags         ImageTag[]

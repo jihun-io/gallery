@@ -25,7 +25,7 @@ export default function PhotoDetail({ image, adjacentIds, isLoading = false }: P
             <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
               {image ? (
                 <img
-                  src={image.imageUrl}
+                  src={image.webpImageUrl || image.imageUrl}
                   alt={image.description || image.title}
                   className="w-full h-full object-contain"
                 />
