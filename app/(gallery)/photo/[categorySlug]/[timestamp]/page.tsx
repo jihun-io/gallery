@@ -90,12 +90,12 @@ export default async function PhotoDetailPage({
   }));
 
   return (
-    <main className="h-full grid grid-rows-[1fr_auto]">
+    <main className="h-full">
       {/* PhotoDetail - 이미지와 EXIF 정보 */}
       <PhotoDetail image={image} adjacentIds={adjacentIds} />
 
-      {/* ThumbnailStrip - 썸네일 내비게이션 */}
-      <nav aria-label="사진 탐색" className="max-w-full overflow-hidden">
+      {/* ThumbnailStrip - 썸네일 내비게이션 (하단 고정) */}
+      <nav aria-label="사진 탐색" className="fixed bottom-0 left-0 right-0 z-20">
         <ThumbnailStrip images={allImages} currentId={image.id} />
       </nav>
     </main>
