@@ -23,7 +23,9 @@ export default function ExifDisplay({ image }: Props) {
         aria-label="카테고리 정보"
       >
         <span className="text-zinc-400">카테고리</span>
-        <span className="text-white font-medium">{image.category.name}</span>
+        <span className="text-white pt-2 font-medium">
+          {image.category.name}
+        </span>
       </section>
 
       {/* Capture Date */}
@@ -32,7 +34,7 @@ export default function ExifDisplay({ image }: Props) {
         aria-label="촬영 정보"
       >
         <span className="text-zinc-400">촬영 일자</span>
-        <span className="text-white">
+        <span className="text-white pt-2">
           {captureDate.toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
@@ -47,13 +49,13 @@ export default function ExifDisplay({ image }: Props) {
       {/* Camera Info */}
       {exif && (exif.cameraMake || exif.cameraModel) && (
         <section className="border-zinc-700" aria-label="카메라 정보">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2">
             <Camera className="w-4 h-4 text-zinc-400" />
             <span className="text-zinc-300 font-medium">카메라</span>
           </div>
 
           {(exif.cameraMake || exif.cameraModel) && (
-            <div className="flex py-2">
+            <div className="flex pt-2">
               <span className="text-white">
                 {[exif.cameraMake, exif.cameraModel].filter(Boolean).join(" ")}
               </span>
