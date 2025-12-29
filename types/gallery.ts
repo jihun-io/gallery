@@ -10,6 +10,28 @@ export interface AdjacentImages {
   next: { categorySlug: string; timestamp: string } | null;
 }
 
+export interface ThumbnailImage {
+  id: string;
+  categorySlug: string;
+  timestamp: string;
+  thumbnailUrl: string | null;
+  imageUrl: string;
+  webpThumbnailUrl?: string | null;
+  webpImageUrl?: string | null;
+  category: {
+    name: string;
+  };
+  index: number;
+  description: string | null;
+  title: string;
+}
+
+export interface PhotoDetailResponse {
+  image: ImageWithRelations;
+  adjacentIds: AdjacentImages;
+  allImages?: ThumbnailImage[];
+}
+
 export interface PhotoGridProps {
   images: ImageWithRelations[];
   showCategory?: boolean;
