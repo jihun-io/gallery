@@ -2,16 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, memo } from "react";
 import Link from "next/link";
-
-interface ThumbnailImage {
-  id: string;
-  categorySlug: string;
-  timestamp: string;
-  thumbnailUrl: string | null;
-  imageUrl: string;
-  webpThumbnailUrl?: string | null;
-  webpImageUrl?: string | null;
-}
+import { ThumbnailImage } from "@/types/gallery";
 
 interface Props {
   images: ThumbnailImage[];
@@ -82,11 +73,12 @@ function ThumbnailStrip({ images, currentId }: Props) {
               href={getPhotoPath(img)}
               replace
               ref={img.id === currentId ? currentRef : null}
-              className={`relative flex-shrink-0 w-20 h-20 rounded overflow-hidden transition-all ${
+              className={`relative shrink-0 w-20 h-20 rounded overflow-hidden transition-all ${
                 img.id === currentId
                   ? "ring-2 ring-blue-500 scale-110"
                   : "opacity-60 hover:opacity-100"
               }`}
+              aria-label={`사진 보기: ${img.category.name}, ${img.index + 1}번째 사진`}
             >
               <img
                 src={
@@ -95,7 +87,7 @@ function ThumbnailStrip({ images, currentId }: Props) {
                   img.webpImageUrl ||
                   img.imageUrl
                 }
-                alt=""
+                alt={img.description || img.title || ""}
                 loading="lazy"
                 className="w-full h-full object-cover"
               />

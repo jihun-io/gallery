@@ -1,13 +1,5 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import ThumbnailStrip from "./ThumbnailStrip";
-
-interface ThumbnailImage {
-  id: string;
-  categorySlug: string;
-  timestamp: string;
-  thumbnailUrl: string | null;
-  imageUrl: string;
-}
+import { ThumbnailImage } from "@/types/gallery";
 
 interface Props {
   allImages?: ThumbnailImage[] | null;
@@ -23,7 +15,7 @@ export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
           <div className="grid grid-cols-1 gap-8">
             {/* Image skeleton - matching PhotoDetail */}
             <section className="space-y-4" aria-label="사진 로딩 중">
-              <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
+              <figure className="relative w-full aspect-4/3 h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
                 <div className="w-full h-full bg-zinc-800 animate-pulse flex items-center justify-center">
                   <div className="text-zinc-600">
                     <svg
@@ -103,7 +95,7 @@ export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
               {[...Array(10)].map((_, i) => (
                 <div
                   key={i}
-                  className="flex-shrink-0 w-20 h-20 bg-zinc-800 rounded animate-pulse"
+                  className="shrink-0 w-20 h-20 bg-zinc-800 rounded animate-pulse"
                 />
               ))}
             </div>

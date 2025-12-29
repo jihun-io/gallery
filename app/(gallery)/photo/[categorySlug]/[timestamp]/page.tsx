@@ -1,8 +1,8 @@
-import { prisma } from '@/lib/prisma';
-import { notFound } from 'next/navigation';
-import { sortByCapture, formatTimestamp } from '@/lib/gallery-utils';
-import PhotoDetail from '../../../components/PhotoDetail';
-import ThumbnailStrip from '../../../components/ThumbnailStrip';
+import { prisma } from "@/lib/prisma";
+import { notFound } from "next/navigation";
+import { sortByCapture, formatTimestamp } from "@/lib/gallery-utils";
+import PhotoDetail from "../../../components/PhotoDetail";
+import ThumbnailStrip from "../../../components/ThumbnailStrip";
 
 export default async function PhotoDetailPage({
   params,
@@ -53,11 +53,16 @@ export default async function PhotoDetailPage({
       captureDate: true,
       thumbnailUrl: true,
       imageUrl: true,
+      webpThumbnailUrl: true,
+      webpImageUrl: true,
       category: {
         select: {
           slug: true,
+          name: true,
         },
       },
+      title: true,
+      description: true,
     },
   });
 
@@ -69,25 +74,45 @@ export default async function PhotoDetailPage({
       currentIndex > 0
         ? {
             categorySlug: sortedImages[currentIndex - 1].category.slug,
-            timestamp: formatTimestamp(new Date(sortedImages[currentIndex - 1].captureDate)),
+            timestamp: formatTimestamp(
+              new Date(sortedImages[currentIndex - 1].captureDate),
+            ),
           }
         : null,
     next:
       currentIndex < sortedImages.length - 1
         ? {
             categorySlug: sortedImages[currentIndex + 1].category.slug,
-            timestamp: formatTimestamp(new Date(sortedImages[currentIndex + 1].captureDate)),
+            timestamp: formatTimestamp(
+              new Date(sortedImages[currentIndex + 1].captureDate),
+            ),
           }
         : null,
   };
 
-  const allImages = sortedImages.map((img) => ({
-    id: img.id,
-    categorySlug: img.category.slug,
-    timestamp: formatTimestamp(new Date(img.captureDate)),
-    thumbnailUrl: img.thumbnailUrl,
-    imageUrl: img.imageUrl,
-  }));
+  // 각 카테고리별 인덱스 계산 (DESC 순서이므로 최신이 1번)
+  const categoryIndexMap = new Map<string, number>();
+  const allImages = sortedImages.map((img) => {
+    const categorySlug = img.category.slug;
+    const currentIndex = categoryIndexMap.get(categorySlug) || 0;
+    categoryIndexMap.set(categorySlug, currentIndex + 1);
+
+    return {
+      id: img.id,
+      categorySlug: img.category.slug,
+      timestamp: formatTimestamp(new Date(img.captureDate)),
+      thumbnailUrl: img.thumbnailUrl,
+      imageUrl: img.imageUrl,
+      webpThumbnailUrl: img.webpThumbnailUrl,
+      webpImageUrl: img.webpImageUrl,
+      category: {
+        name: img.category.name,
+      },
+      index: currentIndex,
+      title: img.title,
+      description: img.description,
+    };
+  });
 
   return (
     <main className="h-full">
@@ -95,7 +120,10 @@ export default async function PhotoDetailPage({
       <PhotoDetail image={image} adjacentIds={adjacentIds} />
 
       {/* ThumbnailStrip - 썸네일 내비게이션 (하단 고정) */}
-      <nav aria-label="사진 탐색" className="fixed bottom-0 left-0 right-0 z-20">
+      <nav
+        aria-label="사진 탐색"
+        className="fixed bottom-0 left-0 right-0 z-20"
+      >
         <ThumbnailStrip images={allImages} currentId={image.id} />
       </nav>
     </main>

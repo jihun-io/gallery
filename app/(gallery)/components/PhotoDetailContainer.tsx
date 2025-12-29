@@ -2,24 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { ImageWithRelations, AdjacentImages } from "@/types/gallery";
+import { ImageWithRelations, AdjacentImages, ThumbnailImage, PhotoDetailResponse } from "@/types/gallery";
 import PhotoDetail from "./PhotoDetail";
 import PhotoDetailSkeleton from "./PhotoDetailSkeleton";
 import ThumbnailStrip from "./ThumbnailStrip";
 
-interface ThumbnailImage {
-  id: string;
-  categorySlug: string;
-  timestamp: string;
-  thumbnailUrl: string | null;
-  imageUrl: string;
-}
-
-interface PhotoData {
-  image: ImageWithRelations;
-  adjacentIds: AdjacentImages;
-  allImages?: ThumbnailImage[];
-}
 
 // 모듈 레벨 캐시 - 컴포넌트가 리마운트되어도 유지됨
 let cachedAllImages: ThumbnailImage[] | null = null;
@@ -30,7 +17,7 @@ export default function PhotoDetailContainer() {
   const categorySlug = params.categorySlug as string;
   const timestamp = params.timestamp as string;
 
-  const [photoData, setPhotoData] = useState<PhotoData | null>(null);
+  const [photoData, setPhotoData] = useState<PhotoDetailResponse | null>(null);
   // 초기값을 캐시된 값으로 설정
   const [allImages, setAllImages] = useState<ThumbnailImage[] | null>(cachedAllImages);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,7 +41,7 @@ export default function PhotoDetailContainer() {
           throw new Error("Failed to fetch photo data");
         }
 
-        const data: PhotoData = await response.json();
+        const data: PhotoDetailResponse = await response.json();
 
         // Save allImages on first load and cache it
         if (data.allImages) {

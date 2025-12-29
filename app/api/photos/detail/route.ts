@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sortByCapture, formatTimestamp } from "@/lib/gallery-utils";
+import { PhotoDetailResponse, ThumbnailImage } from "@/types/gallery";
 
 export async function GET(request: NextRequest) {
   try {
@@ -61,9 +62,12 @@ export async function GET(request: NextRequest) {
         imageUrl: true,
         webpThumbnailUrl: true,
         webpImageUrl: true,
+        title: true,
+        description: true,
         category: {
           select: {
             slug: true,
+            name: true,
           },
         },
       },
@@ -93,22 +97,37 @@ export async function GET(request: NextRequest) {
           : null,
     };
 
-    const response: any = {
+    const response: PhotoDetailResponse = {
       image,
       adjacentIds,
     };
 
     // Include all images only on initial load
     if (includeAll) {
-      response.allImages = sortedImages.map((img) => ({
-        id: img.id,
-        categorySlug: img.category.slug,
-        timestamp: formatTimestamp(new Date(img.captureDate)),
-        thumbnailUrl: img.thumbnailUrl,
-        imageUrl: img.imageUrl,
-        webpThumbnailUrl: img.webpThumbnailUrl,
-        webpImageUrl: img.webpImageUrl,
-      }));
+      // 각 카테고리별 인덱스 계산 (DESC 순서이므로 최신이 1번)
+      const categoryIndexMap = new Map<string, number>();
+      const allImages: ThumbnailImage[] = sortedImages.map((img) => {
+        const categorySlug = img.category.slug;
+        const currentIndex = categoryIndexMap.get(categorySlug) || 0;
+        categoryIndexMap.set(categorySlug, currentIndex + 1);
+
+        return {
+          id: img.id,
+          categorySlug: img.category.slug,
+          timestamp: formatTimestamp(new Date(img.captureDate)),
+          thumbnailUrl: img.thumbnailUrl,
+          imageUrl: img.imageUrl,
+          webpThumbnailUrl: img.webpThumbnailUrl,
+          webpImageUrl: img.webpImageUrl,
+          category: {
+            name: img.category.name,
+          },
+          index: currentIndex,
+          title: img.title,
+          description: img.description,
+        };
+      });
+      response.allImages = allImages;
     }
 
     return NextResponse.json(response);
