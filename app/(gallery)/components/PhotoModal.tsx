@@ -53,7 +53,7 @@ export default function PhotoModal({ children }: Props) {
       {/* Close button */}
       <button
         onClick={() => router.back()}
-        className="fixed top-2 right-2 -translate-x-1/2 translate-y-1/2 z-50 p-4 bg-zinc-900/80 hover:bg-zinc-800 text-white rounded-full transition-colors backdrop-blur-sm"
+        className="fixed top-2 right-2 -translate-x-1/2 translate-y-1/2 z-50 p-2 md:p-3 bg-zinc-900/80 hover:bg-zinc-800 text-white rounded-full transition-colors backdrop-blur-sm"
         aria-label="닫기"
       >
         <X className="w-6 h-6" />
