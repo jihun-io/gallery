@@ -14,8 +14,8 @@ export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
         <article className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 gap-8">
             {/* Image skeleton - matching PhotoDetail */}
-            <section className="space-y-4" aria-label="사진 로딩 중">
-              <figure className="relative w-full aspect-4/3 h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
+            <section className="space-y-4" aria-label="사진 로드 중...">
+              <figure className="relative w-full aspect-4/3 h-[calc(100vh-112px-64px-6rem)] bg-zinc-900 rounded-lg overflow-hidden">
                 <div className="w-full h-full bg-zinc-800 animate-pulse flex items-center justify-center">
                   <div className="text-zinc-600">
                     <svg
@@ -44,7 +44,7 @@ export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
             </section>
 
             {/* EXIF Info skeleton - matching ExifDisplay */}
-            <aside className="lg:col-span-1" aria-label="사진 정보 로딩 중">
+            <aside className="lg:col-span-1" aria-label="사진 정보 로드 중...">
               <article className="bg-zinc-900 rounded-lg p-6 space-y-4">
                 {/* Category section */}
                 <section className="flex justify-between border-b border-zinc-700 pb-3 gap-x-8">
@@ -87,7 +87,7 @@ export default function PhotoDetailSkeleton({ allImages, currentId }: Props) {
         <ThumbnailStrip images={allImages} currentId={currentId} />
       ) : (
         <nav
-          aria-label="사진 탐색 로딩 중"
+          aria-label="사진 탐색 로드 중..."
           className="bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800"
         >
           <div className="overflow-x-auto">

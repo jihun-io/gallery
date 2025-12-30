@@ -20,7 +20,7 @@ export default function PhotoDetail({
         <div className="grid grid-cols-1 gap-8">
           {/* Image */}
           <section className="space-y-4" aria-label="사진 표시">
-            <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-4rem)] bg-zinc-900 rounded-lg overflow-hidden">
+            <figure className="relative w-full aspect-[4/3] h-[calc(100vh-112px-64px-6rem)] bg-zinc-900 rounded-lg overflow-hidden">
               {image ? (
                 <img
                   src={image.webpImageUrl || image.imageUrl}
