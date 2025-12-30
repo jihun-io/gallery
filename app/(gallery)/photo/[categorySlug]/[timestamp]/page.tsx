@@ -67,28 +67,6 @@ export default async function PhotoDetailPage({
   });
 
   const sortedImages = sortByCapture(allImagesGlobal);
-  const currentIndex = sortedImages.findIndex((img) => img.id === image.id);
-
-  const adjacentIds = {
-    prev:
-      currentIndex > 0
-        ? {
-            categorySlug: sortedImages[currentIndex - 1].category.slug,
-            timestamp: formatTimestamp(
-              new Date(sortedImages[currentIndex - 1].captureDate),
-            ),
-          }
-        : null,
-    next:
-      currentIndex < sortedImages.length - 1
-        ? {
-            categorySlug: sortedImages[currentIndex + 1].category.slug,
-            timestamp: formatTimestamp(
-              new Date(sortedImages[currentIndex + 1].captureDate),
-            ),
-          }
-        : null,
-  };
 
   // 각 카테고리별 인덱스 계산 (DESC 순서이므로 최신이 1번)
   const categoryIndexMap = new Map<string, number>();
