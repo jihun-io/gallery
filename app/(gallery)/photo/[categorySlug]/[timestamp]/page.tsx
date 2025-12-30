@@ -117,7 +117,7 @@ export default async function PhotoDetailPage({
   return (
     <main className="h-full">
       {/* PhotoDetail - 이미지와 EXIF 정보 */}
-      <PhotoDetail image={image} adjacentIds={adjacentIds} />
+      <PhotoDetail image={image} />
 
       {/* ThumbnailStrip - 썸네일 내비게이션 (하단 고정) */}
       <nav

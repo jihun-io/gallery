@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { ImageWithRelations, AdjacentImages, ThumbnailImage, PhotoDetailResponse } from "@/types/gallery";
+import {
+  ImageWithRelations,
+  AdjacentImages,
+  ThumbnailImage,
+  PhotoDetailResponse,
+} from "@/types/gallery";
 import PhotoDetail from "./PhotoDetail";
 import PhotoDetailSkeleton from "./PhotoDetailSkeleton";
 import ThumbnailStrip from "./ThumbnailStrip";
-
 
 // 모듈 레벨 캐시 - 컴포넌트가 리마운트되어도 유지됨
 let cachedAllImages: ThumbnailImage[] | null = null;
@@ -19,7 +23,9 @@ export default function PhotoDetailContainer() {
 
   const [photoData, setPhotoData] = useState<PhotoDetailResponse | null>(null);
   // 초기값을 캐시된 값으로 설정
-  const [allImages, setAllImages] = useState<ThumbnailImage[] | null>(cachedAllImages);
+  const [allImages, setAllImages] = useState<ThumbnailImage[] | null>(
+    cachedAllImages,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +38,7 @@ export default function PhotoDetailContainer() {
         // Include all images only on initial load (when allImages is null)
         const includeAll = allImages === null;
         const url = `/api/photos/detail?categorySlug=${encodeURIComponent(
-          categorySlug
+          categorySlug,
         )}&timestamp=${encodeURIComponent(timestamp)}&includeAll=${includeAll}`;
 
         const response = await fetch(url);
@@ -88,11 +94,7 @@ export default function PhotoDetailContainer() {
   return (
     <main className="h-full grid grid-rows-[1fr_auto]">
       {/* PhotoDetail - 이미지와 EXIF 정보 */}
-      <PhotoDetail
-        image={photoData?.image || null}
-        adjacentIds={photoData?.adjacentIds || null}
-        isLoading={isLoading}
-      />
+      <PhotoDetail image={photoData?.image || null} />
 
       {/* ThumbnailStrip - 항상 렌더링되어 스크롤 위치 유지 */}
       <nav aria-label="사진 탐색" className="max-w-full overflow-hidden">

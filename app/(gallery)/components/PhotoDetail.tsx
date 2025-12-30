@@ -5,15 +5,9 @@ import ExifDisplay from "./ExifDisplay";
 
 interface Props {
   image?: ImageWithRelations | null;
-  adjacentIds?: AdjacentImages | null;
-  isLoading?: boolean;
 }
 
-export default function PhotoDetail({
-  image,
-  adjacentIds,
-  isLoading = false,
-}: Props) {
+export default function PhotoDetail({ image }: Props) {
   return (
     <div className="overflow-y-auto flex flex-col h-full">
       <article className="container mx-auto px-4 py-8">
