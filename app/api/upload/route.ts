@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
       latitude: (rawExifData.latitude || rawExifData.GPSLatitude) as number | undefined || null,
       longitude: (rawExifData.longitude || rawExifData.GPSLongitude) as number | undefined || null,
       dateTaken: (rawExifData.DateTimeOriginal || rawExifData.CreateDate || rawExifData.DateTime) as string | undefined || null,
+      timezone: (rawExifData.OffsetTimeOriginal || rawExifData.OffsetTime) as string | undefined || null,
     } : null;
 
     console.log('Processed EXIF Info:', exifInfo);

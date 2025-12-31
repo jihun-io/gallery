@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageWithRelations } from "@/types/gallery";
-import { getCaptureDate, formatShutterSpeed } from "@/lib/gallery-utils";
+import { getLocalCaptureTime, formatShutterSpeed } from "@/lib/gallery-utils";
 import { ImageMetadata } from "@/types";
 import { MapPin, Camera, Tag } from "lucide-react";
 import AppleMap from "./AppleMap";
@@ -13,7 +13,7 @@ interface Props {
 export default function ExifDisplay({ image }: Props) {
   const metadata = image.metadata as ImageMetadata | null;
   const exif = metadata?.exif;
-  const captureDate = getCaptureDate(image);
+  const captureDate = getLocalCaptureTime(image);
 
   return (
     <article className="bg-zinc-900 rounded-lg p-6 space-y-4">
@@ -42,6 +42,7 @@ export default function ExifDisplay({ image }: Props) {
             hour: "numeric",
             minute: "numeric",
             second: "numeric",
+            timeZone: "UTC",
           })}
         </span>
       </section>

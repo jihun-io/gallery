@@ -11,6 +11,7 @@ export interface ExifData {
   latitude?: number | null;
   longitude?: number | null;
   dateTaken?: string | Date | null;
+  timezone?: string | null; // 시간대 오프셋 (예: "+09:00", "-05:00")
 }
 
 // 이미지 메타데이터 타입

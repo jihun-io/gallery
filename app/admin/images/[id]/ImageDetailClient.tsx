@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2, Save, ArrowLeft, Loader2, Camera, MapPin } from 'lucide-react';
 import { getErrorMessage } from '@/lib/utils';
+import { getLocalTime } from '@/lib/gallery-utils';
 import type { ImageMetadata } from '@/types';
 
 interface Category {
@@ -24,6 +25,7 @@ interface ImageData {
   thumbnailUrl: string | null;
   categoryId: string;
   uploadedAt: Date;
+  captureDate: Date;
   metadata: ImageMetadata | null;
   category: Category;
   tags: Array<{
@@ -251,11 +253,27 @@ export default function ImageDetailClient({ image, categories, tags }: Props) {
                     </span>
                   </div>
                 )}
-                {image.metadata.exif.dateTaken && (
-                  <div className="flex justify-between py-2 border-b border-gray-100">
+                {image.captureDate && (
+                  <div className="flex flex-col py-2 border-b border-gray-100 gap-1">
                     <span className="text-gray-600">촬영 날짜</span>
                     <span className="font-medium text-gray-900">
-                      {new Date(image.metadata.exif.dateTaken).toLocaleString('ko-KR')}
+                      {getLocalTime(
+                        new Date(image.captureDate),
+                        image.metadata?.exif?.timezone
+                      ).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        timeZone: 'UTC',
+                      })}
+                      {image.metadata?.exif?.timezone && (
+                        <span className="text-gray-500 ml-2">
+                          ({image.metadata.exif.timezone})
+                        </span>
+                      )}
                     </span>
                   </div>
                 )}
