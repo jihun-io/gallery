@@ -84,9 +84,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-# Create logs directory with proper permissions
-RUN mkdir -p /app/logs && \
-    chown -R nextjs:nodejs /app/logs
+# Create logs and cache directories with proper permissions
+RUN mkdir -p /app/logs /app/.next/cache && \
+    chown -R nextjs:nodejs /app/logs /app/.next/cache
 
 # Switch to non-root user
 USER nextjs
