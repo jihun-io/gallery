@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import CategoryGrid from "../components/CategoryGrid";
 
+// ISR: 10분마다 자동 재생성
+export const revalidate = 600;
+
 export default async function CategoriesPage() {
   const categories = await prisma.category.findMany({
     include: {

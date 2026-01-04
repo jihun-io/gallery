@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { sortByCapture } from '@/lib/gallery-utils';
 import PhotoGrid from './components/PhotoGrid';
 
+// ISR: 10분마다 자동 재생성
+export const revalidate = 600;
+
 export default async function GalleryPage() {
   const images = await prisma.image.findMany({
     include: {

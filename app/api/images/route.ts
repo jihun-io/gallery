@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { imageSchema } from '@/lib/validations';
+import { formatTimestamp } from '@/lib/gallery-utils';
 import { ImageMetadata } from '@/types';
 import { z } from 'zod';
 
@@ -92,6 +94,15 @@ export async function POST(req: NextRequest) {
         },
       },
     });
+
+    // 메인 페이지와 카테고리 페이지 즉시 재생성
+    revalidatePath('/');
+    revalidatePath('/categories');
+    revalidatePath(`/categories/${image.category.slug}`);
+
+    // 상세 페이지도 재생성
+    const timestamp = formatTimestamp(new Date(image.captureDate));
+    revalidatePath(`/photo/${image.category.slug}/${timestamp}`);
 
     return NextResponse.json(image, { status: 201 });
   } catch (error) {

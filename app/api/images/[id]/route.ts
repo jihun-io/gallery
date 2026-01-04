@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { deleteFromR2 } from '@/lib/r2';
+import { formatTimestamp } from '@/lib/gallery-utils';
 import { ImageMetadata } from '@/types';
 
 export async function GET(
@@ -85,6 +87,15 @@ export async function PUT(
       },
     });
 
+    // 메인 페이지와 카테고리 페이지 즉시 재생성
+    revalidatePath('/');
+    revalidatePath('/categories');
+    revalidatePath(`/categories/${image.category.slug}`);
+
+    // 상세 페이지도 재생성
+    const timestamp = formatTimestamp(new Date(image.captureDate));
+    revalidatePath(`/photo/${image.category.slug}/${timestamp}`);
+
     return NextResponse.json(image);
   } catch (error) {
     return NextResponse.json(
@@ -108,6 +119,9 @@ export async function DELETE(
   try {
     const image = await prisma.image.findUnique({
       where: { id },
+      include: {
+        category: true,
+      },
     });
 
     if (!image) {
@@ -135,6 +149,15 @@ export async function DELETE(
     await prisma.image.delete({
       where: { id },
     });
+
+    // 메인 페이지와 카테고리 페이지 즉시 재생성
+    revalidatePath('/');
+    revalidatePath('/categories');
+    revalidatePath(`/categories/${image.category.slug}`);
+
+    // 상세 페이지도 재생성
+    const timestamp = formatTimestamp(new Date(image.captureDate));
+    revalidatePath(`/photo/${image.category.slug}/${timestamp}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

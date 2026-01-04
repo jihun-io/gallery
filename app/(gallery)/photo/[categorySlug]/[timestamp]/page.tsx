@@ -4,6 +4,9 @@ import { sortByCapture, formatTimestamp } from "@/lib/gallery-utils";
 import PhotoDetail from "../../../components/PhotoDetail";
 import ThumbnailStrip from "../../../components/ThumbnailStrip";
 
+// ISR: 10분마다 자동 재생성
+export const revalidate = 600;
+
 export default async function PhotoDetailPage({
   params,
 }: {
