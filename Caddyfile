@@ -1,0 +1,3 @@
+gallery.jihun.io {
+    reverse_proxy gallery-app:3001
+}

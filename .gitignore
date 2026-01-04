@@ -44,6 +44,8 @@ next-env.d.ts
 
 # docker
 logs/
+caddy-data/
+caddy-config/
 
 # deployment
 .env.production
