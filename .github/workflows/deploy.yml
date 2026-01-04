@@ -68,18 +68,15 @@ jobs:
             cd ~/gallery-jihun-io
             echo "🔄 Pulling latest image..."
             docker compose pull gallery
-            echo "🚀 Starting container with new image..."
-            docker compose up -d --no-deps gallery
+            echo "🚀 Restarting container with new image..."
+            docker compose up -d --force-recreate --no-deps gallery
             echo "⏳ Waiting for container to be ready..."
-            sleep 5
-            echo "♻️  PM2 zero-downtime reload..."
-            docker exec gallery-app pm2 reload ecosystem.config.js --update-env
+            sleep 10
             echo "✅ Deployment completed!"
             docker compose ps
-            docker exec gallery-app pm2 list
 
       - name: Deployment info
         run: |
           echo "✅ Docker image successfully built and pushed to GHCR!"
           echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          echo "🚀 Deployed to server with zero-downtime PM2 reload!"
+          echo "🚀 Deployed to server successfully!"

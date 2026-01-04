@@ -55,9 +55,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Install PM2 globally
-RUN npm install -g pm2
-
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
@@ -75,18 +72,15 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/prisma ./prisma
 
-# Copy PM2 ecosystem config
-COPY --from=builder /app/ecosystem.config.js ./ecosystem.config.js
-
 # Set environment variables
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-# Create logs and cache directories with proper permissions
-RUN mkdir -p /app/logs /app/.next/cache && \
-    chown -R nextjs:nodejs /app/logs /app/.next/cache
+# Create cache directory with proper permissions
+RUN mkdir -p /app/.next/cache && \
+    chown -R nextjs:nodejs /app/.next/cache
 
 # Switch to non-root user
 USER nextjs
@@ -98,5 +92,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:3001/api/health || exit 1
 
-# Start application with PM2
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+# Start Next.js directly
+CMD ["node", "server.js"]
