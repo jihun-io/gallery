@@ -47,6 +47,7 @@ logs/
 
 # deployment
 .env.production
+docker-compose.yml
 
 #claude
 .claude
