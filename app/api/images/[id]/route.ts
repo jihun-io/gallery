@@ -3,7 +3,6 @@ import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { deleteFromR2 } from '@/lib/r2';
-import { formatTimestamp } from '@/lib/gallery-utils';
 import { ImageMetadata } from '@/types';
 
 export async function GET(
@@ -87,14 +86,8 @@ export async function PUT(
       },
     });
 
-    // 메인 페이지와 카테고리 페이지 즉시 재생성
-    revalidatePath('/');
-    revalidatePath('/categories');
-    revalidatePath(`/categories/${image.category.slug}`);
-
-    // 상세 페이지도 재생성
-    const timestamp = formatTimestamp(new Date(image.captureDate));
-    revalidatePath(`/photo/${image.category.slug}/${timestamp}`);
+    // 캐시 무효화 (layout 전체)
+    revalidatePath('/', 'layout');
 
     return NextResponse.json(image);
   } catch (error) {
@@ -150,14 +143,8 @@ export async function DELETE(
       where: { id },
     });
 
-    // 메인 페이지와 카테고리 페이지 즉시 재생성
-    revalidatePath('/');
-    revalidatePath('/categories');
-    revalidatePath(`/categories/${image.category.slug}`);
-
-    // 상세 페이지도 재생성
-    const timestamp = formatTimestamp(new Date(image.captureDate));
-    revalidatePath(`/photo/${image.category.slug}/${timestamp}`);
+    // 캐시 무효화 (layout 전체)
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ success: true });
   } catch (error) {

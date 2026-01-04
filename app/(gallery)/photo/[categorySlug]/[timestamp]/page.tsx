@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { sortByCapture, formatTimestamp } from "@/lib/gallery-utils";
@@ -7,6 +8,68 @@ import ThumbnailStrip from "../../../components/ThumbnailStrip";
 // ISR: 10분마다 자동 재생성
 export const revalidate = 600;
 
+const getPhotoDetailData = unstable_cache(
+  async (categorySlug: string, timestamp: string) => {
+    // Find the image ID by category slug and timestamp
+    const imagesInCategory = await prisma.image.findMany({
+      where: {
+        category: {
+          slug: categorySlug,
+        },
+      },
+      select: {
+        id: true,
+        captureDate: true,
+      },
+    });
+
+    const imageId = imagesInCategory.find((img) => {
+      return formatTimestamp(new Date(img.captureDate)) === timestamp;
+    })?.id;
+
+    if (!imageId) {
+      return null;
+    }
+
+    // Get the full image data with metadata
+    const image = await prisma.image.findUnique({
+      where: { id: imageId },
+      include: {
+        category: true,
+        tags: { include: { tag: true } },
+      },
+    });
+
+    if (!image) {
+      return null;
+    }
+
+    // Get all images for navigation
+    const allImagesGlobal = await prisma.image.findMany({
+      select: {
+        id: true,
+        captureDate: true,
+        thumbnailUrl: true,
+        imageUrl: true,
+        webpThumbnailUrl: true,
+        webpImageUrl: true,
+        category: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+        title: true,
+        description: true,
+      },
+    });
+
+    return { image, allImagesGlobal };
+  },
+  ["photo-detail"],
+  { revalidate: 600, tags: ["images"] }
+);
+
 export default async function PhotoDetailPage({
   params,
 }: {
@@ -15,59 +78,13 @@ export default async function PhotoDetailPage({
   const { categorySlug, timestamp } = await params;
   const decodedSlug = decodeURIComponent(categorySlug);
 
-  // Find the image ID by category slug and timestamp (without metadata for performance)
-  const imagesInCategory = await prisma.image.findMany({
-    where: {
-      category: {
-        slug: decodedSlug,
-      },
-    },
-    select: {
-      id: true,
-      captureDate: true,
-    },
-  });
+  const data = await getPhotoDetailData(decodedSlug, timestamp);
 
-  const imageId = imagesInCategory.find((img) => {
-    return formatTimestamp(new Date(img.captureDate)) === timestamp;
-  })?.id;
-
-  if (!imageId) {
+  if (!data) {
     notFound();
   }
 
-  // Get the full image data with metadata only for the current image
-  const image = await prisma.image.findUnique({
-    where: { id: imageId },
-    include: {
-      category: true,
-      tags: { include: { tag: true } },
-    },
-  });
-
-  if (!image) {
-    notFound();
-  }
-
-  // Get all images for navigation (without metadata for performance)
-  const allImagesGlobal = await prisma.image.findMany({
-    select: {
-      id: true,
-      captureDate: true,
-      thumbnailUrl: true,
-      imageUrl: true,
-      webpThumbnailUrl: true,
-      webpImageUrl: true,
-      category: {
-        select: {
-          slug: true,
-          name: true,
-        },
-      },
-      title: true,
-      description: true,
-    },
-  });
+  const { image, allImagesGlobal } = data;
 
   const sortedImages = sortByCapture(allImagesGlobal);
 
