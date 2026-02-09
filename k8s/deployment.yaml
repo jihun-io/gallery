@@ -42,7 +42,7 @@ spec:
 
       containers:
         - name: gallery
-          image: ghcr.io/jihun-io/gallery:sha-ab6977e
+          image: ghcr.io/jihun-io/gallery:sha-8f6359c
           ports:
             - containerPort: 3001
           env:
