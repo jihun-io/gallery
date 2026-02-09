@@ -53,3 +53,12 @@ docker-compose.yml
 
 #claude
 .claude
+
+# Kubernetes Secrets
+k8s/secrets.yaml
+k8s/*-secrets.yaml
+k8s/*.secret.yaml
+
+# backup files
+*.sql
+*.dump
