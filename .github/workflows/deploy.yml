@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: 빌드 및 k3s 배포
 
 on:
   push:
@@ -11,39 +11,37 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push:
-    name: Build and Push to GHCR
+  build-and-deploy:
+    name: 이미지 빌드 및 배포
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
-      - name: Checkout code
+      - name: 코드 체크아웃
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: Docker Buildx 설정
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: GHCR 로그인
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
+      - name: 메타데이터 추출
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
-            type=sha,prefix={{branch}}-
-            type=ref,event=branch
-            type=semver,pattern={{version}}
+            type=sha
 
-      - name: Build and push Docker image
+      - name: Docker 이미지 빌드 및 푸시
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -54,29 +52,34 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Image digest
-        run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"
-
-      - name: Deploy to server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          port: ${{ secrets.SERVER_PORT }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/gallery-jihun-io
-            echo "🔄 Pulling latest image..."
-            docker compose pull gallery
-            echo "🚀 Restarting container with new image..."
-            docker compose up -d --force-recreate --no-deps gallery
-            echo "⏳ Waiting for container to be ready..."
-            sleep 10
-            echo "✅ Deployment completed!"
-            docker compose ps
-
-      - name: Deployment info
+      - name: k8s manifest 업데이트
         run: |
-          echo "✅ Docker image successfully built and pushed to GHCR!"
-          echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          echo "🚀 Deployed to server successfully!"
+          echo "🔄 deployment.yaml 이미지 태그 업데이트 중..."
+
+          # deployment.yaml의 이미지 업데이트
+          sed -i "s|image: ghcr.io/jihun-io/gallery:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" k8s/deployment.yaml
+
+          echo "✅ 변경사항:"
+          git diff k8s/deployment.yaml
+
+      - name: GitOps 레포 커밋 및 푸시
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          git add k8s/deployment.yaml
+
+          if git diff --staged --quiet; then
+            echo "📝 변경사항 없음"
+          else
+            git commit -m "배포: 이미지 업데이트 ${{ github.sha }}"
+            git push
+            echo "✅ k8s manifest 업데이트 완료"
+          fi
+
+      - name: 배포 정보 출력
+        run: |
+          echo "✅ Docker 이미지 빌드 및 푸시 완료!"
+          echo "📦 이미지: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          echo "🔄 k8s manifest 업데이트 완료!"
+          echo "⏳ ArgoCD가 자동으로 배포합니다 (약 3분 소요)"
