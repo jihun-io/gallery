@@ -58,7 +58,10 @@ jobs:
 
           # sha- 프리픽스 + 짧은 SHA (7자리)
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-          sed -i "s|image: ghcr.io/jihun-io/gallery:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${SHORT_SHA}|g" k8s/deployment.yaml
+          IMAGE_PREFIX="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:"
+          # sed 패턴에서 사용하기 위해 정규식 메타문자를 이스케이프
+          ESCAPED_IMAGE_PREFIX=$(printf '%s\n' "$IMAGE_PREFIX" | sed 's/[.[\*^$+?{}()|\\/]/\\&/g')
+          sed -i "s|image: ${ESCAPED_IMAGE_PREFIX}.*|image: ${IMAGE_PREFIX}sha-${SHORT_SHA}|g" k8s/deployment.yaml
 
           echo "✅ 변경사항:"
           git diff k8s/deployment.yaml
