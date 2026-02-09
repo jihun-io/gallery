@@ -9,9 +9,10 @@ import {
 
 interface Props {
   image?: ImageWithRelations | null;
+  isDetailPage?: boolean;
 }
 
-export default function PhotoDetail({ image }: Props) {
+export default function PhotoDetail({ image, isDetailPage }: Props) {
   return (
     <div className="overflow-y-auto flex flex-col h-full">
       <article className="container mx-auto px-4 py-8">
@@ -32,7 +33,10 @@ export default function PhotoDetail({ image }: Props) {
           </section>
 
           {/* EXIF Info */}
-          <aside className="lg:col-span-1" aria-label="사진 정보">
+          <aside
+            className={`lg:col-span-1 ${isDetailPage ? "mb-[7rem]" : "mb-0"}`}
+            aria-label="사진 정보"
+          >
             {image ? <ExifDisplay image={image} /> : <SkeletonExifDisplay />}
           </aside>
         </div>
