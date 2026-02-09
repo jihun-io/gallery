@@ -42,7 +42,7 @@ spec:
 
       containers:
         - name: gallery
-          image: ghcr.io/jihun-io/gallery:PLACEHOLDER
+          image: ghcr.io/jihun-io/gallery:sha-ab6977e
           ports:
             - containerPort: 3001
           env:
