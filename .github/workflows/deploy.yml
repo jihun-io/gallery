@@ -56,8 +56,9 @@ jobs:
         run: |
           echo "🔄 deployment.yaml 이미지 태그 업데이트 중..."
 
-          # deployment.yaml의 이미지 업데이트
-          sed -i "s|image: ghcr.io/jihun-io/gallery:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" k8s/deployment.yaml
+          # sha- 프리픽스 + 짧은 SHA (7자리)
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          sed -i "s|image: ghcr.io/jihun-io/gallery:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${SHORT_SHA}|g" k8s/deployment.yaml
 
           echo "✅ 변경사항:"
           git diff k8s/deployment.yaml

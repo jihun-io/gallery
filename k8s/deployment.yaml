@@ -5,7 +5,7 @@ metadata:
   namespace: gallery
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
@@ -17,8 +17,8 @@ metadata:
   namespace: gallery
 spec:
   ports:
-  - port: 3001
-    targetPort: 3001
+    - port: 3001
+      targetPort: 3001
   selector:
     app: gallery
 ---
@@ -38,102 +38,102 @@ spec:
         app: gallery
     spec:
       imagePullSecrets:
-      - name: ghcr-secret
+        - name: ghcr-secret
 
       containers:
-      - name: gallery
-        image: ghcr.io/jihun-io/gallery:8f186e61cf34ecb16f5b51d140e4316378d8ee2e
-        ports:
-        - containerPort: 3001
-        env:
-        # Node.js
-        - name: NODE_ENV
-          value: "production"
-        - name: PORT
-          value: "3001"
-        - name: HOSTNAME
-          value: "0.0.0.0"
-        - name: AUTH_TRUST_HOST
-          value: "true"
-        
-        # Database - Secret에서 가져오기
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: gallery-env-secrets
-              key: database-url
-        
-        # URL (공개 정보)
-        - name: NEXT_PUBLIC_SITE_URL
-          value: "https://gallery.jihun.io"
-        
-        # NextAuth
-        - name: NEXTAUTH_URL
-          value: "https://gallery.jihun.io"
-        - name: NEXTAUTH_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: gallery-env-secrets
-              key: nextauth-secret
-        
-        # Storage (MinIO)
-        - name: R2_ACCOUNT_ID
-          value: "localhost"
-        - name: R2_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: gallery-env-secrets
-              key: r2-access-key
-        - name: R2_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: gallery-env-secrets
-              key: r2-secret-key
-        - name: R2_BUCKET_NAME
-          value: "gallery"
-        - name: R2_PUBLIC_URL
-          value: "/api/storage"
-        - name: R2_ENDPOINT
-          value: "http://minio:9000"
-        
-        # Apple MapKit JS
-        - name: MAPKIT_TEAM_ID
-          value: "62494T7ZTJ"
-        - name: MAPKIT_KEY_ID
-          value: "29R9598QRN"
-        - name: MAPKIT_PRIVATE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: gallery-env-secrets
-              key: mapkit-private-key
-        
-        volumeMounts:
-        - name: cache
-          mountPath: /app/.next/cache
-        
-        resources:
-          limits:
-            memory: "1024Mi"
-          requests:
-            memory: "512Mi"
-        
-        livenessProbe:
-          httpGet:
-            path: /api/health
-            port: 3001
-          initialDelaySeconds: 40
-          periodSeconds: 30
-          timeoutSeconds: 10
-        
-        readinessProbe:
-          httpGet:
-            path: /api/health
-            port: 3001
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-      
+        - name: gallery
+          image: ghcr.io/jihun-io/gallery:PLACEHOLDER
+          ports:
+            - containerPort: 3001
+          env:
+            # Node.js
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3001"
+            - name: HOSTNAME
+              value: "0.0.0.0"
+            - name: AUTH_TRUST_HOST
+              value: "true"
+
+            # Database - Secret에서 가져오기
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gallery-env-secrets
+                  key: database-url
+
+            # URL (공개 정보)
+            - name: NEXT_PUBLIC_SITE_URL
+              value: "https://gallery.jihun.io"
+
+            # NextAuth
+            - name: NEXTAUTH_URL
+              value: "https://gallery.jihun.io"
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: gallery-env-secrets
+                  key: nextauth-secret
+
+            # Storage (MinIO)
+            - name: R2_ACCOUNT_ID
+              value: "localhost"
+            - name: R2_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: gallery-env-secrets
+                  key: r2-access-key
+            - name: R2_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gallery-env-secrets
+                  key: r2-secret-key
+            - name: R2_BUCKET_NAME
+              value: "gallery"
+            - name: R2_PUBLIC_URL
+              value: "/api/storage"
+            - name: R2_ENDPOINT
+              value: "http://minio:9000"
+
+            # Apple MapKit JS
+            - name: MAPKIT_TEAM_ID
+              value: "62494T7ZTJ"
+            - name: MAPKIT_KEY_ID
+              value: "29R9598QRN"
+            - name: MAPKIT_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gallery-env-secrets
+                  key: mapkit-private-key
+
+          volumeMounts:
+            - name: cache
+              mountPath: /app/.next/cache
+
+          resources:
+            limits:
+              memory: "1024Mi"
+            requests:
+              memory: "512Mi"
+
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3001
+            initialDelaySeconds: 40
+            periodSeconds: 30
+            timeoutSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+
       volumes:
-      - name: cache
-        persistentVolumeClaim:
-          claimName: gallery-cache
+        - name: cache
+          persistentVolumeClaim:
+            claimName: gallery-cache
