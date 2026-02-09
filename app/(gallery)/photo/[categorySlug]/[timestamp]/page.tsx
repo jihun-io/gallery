@@ -67,7 +67,7 @@ const getPhotoDetailData = unstable_cache(
     return { image, allImagesGlobal };
   },
   ["photo-detail"],
-  { revalidate: 600, tags: ["images"] }
+  { revalidate: 600, tags: ["images"] },
 );
 
 export default async function PhotoDetailPage({
@@ -115,7 +115,7 @@ export default async function PhotoDetailPage({
   return (
     <main className="h-full">
       {/* PhotoDetail - 이미지와 EXIF 정보 */}
-      <PhotoDetail image={image} />
+      <PhotoDetail image={image} isDetailPage={true} />
 
       {/* ThumbnailStrip - 썸네일 내비게이션 (하단 고정) */}
       <nav
